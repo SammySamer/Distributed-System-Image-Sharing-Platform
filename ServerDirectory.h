@@ -303,6 +303,7 @@ void storeUsers(fstream& users) {
 	users.clear();
 }
 
+
 //loads in data from the verify file into the verify map the first time the server opens
 void storeVerify(fstream& verify) {
 
@@ -328,6 +329,7 @@ void storeVerify(fstream& verify) {
 	}
 	verify.clear();
 }
+
 
 //attempts to sign user up, and put data into respective files
 bool signUp(string username, string password) {
@@ -367,6 +369,7 @@ bool signUp(string username, string password) {
 		return false;
 	}
 }
+
 
 //checks if the username and password match.
 //Updates user map with user's ip, port, and login status
