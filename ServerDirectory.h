@@ -27,21 +27,21 @@
 using namespace std;
 
 
-struct data {
-	vector<string> imgs;
+struct userInfo {
 	bool online = false;
-	string currentIP = "";
-	string port = "";
+	string userIP = "";
+	string userPort = "";
+	vector<string> imgs;
 };
 
 class DircServ {
 private:
-	UDPSocketServer* sv;
+	UDPSocketServer* srvr;
 	fstream verify, users;
 	map<string, string> verify_map;
-	map<string, data> users_map;
-	bool con;
-	int port;
+	map<string, userInfo> users_map;
+	bool connect;
+	int userPort;
 	char sender_ip[INET_ADDRSTRLEN];
 	uint16_t sender_port;
 
@@ -53,10 +53,10 @@ public:
 
 	DircServ() {
 		cout << "Enter the port: ";
-		cin >> port;
+		cin >> userPort;
 
-		con = true;
-		sv = new UDPSocketServer(port);
+		connect = true;
+		srvr = new UDPSocketServer(userPort);
 		verify.open("verify.txt", fstream::out | fstream::in | fstream::app);
 		if (verify.fail())
 			cout << "Verify file open failed!";
@@ -79,7 +79,7 @@ public:
 		memset(buffer, 0, sizeof(buffer));
 
 		//receive marshalled message
-		r = recvfrom(sv->s, buffer, MAIN_BUFFER, 0,
+		r = recvfrom(srvr->s, buffer, MAIN_BUFFER, 0,
 			(struct sockaddr*) & recievedAddr, &addresslength);
 
 		printf("Received Message = %s.\n", buffer);
@@ -126,7 +126,7 @@ public:
 				little_buffer[0] = '0';
 			// sprintf((char *)(little_buffer), "%d", didsign);
 			little_buffer[1] = 0;
-			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
+			if (sendto(srvr->s, little_buffer, strlen((const char*)little_buffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("Sign up reply sendto failed");
 			}
@@ -163,7 +163,7 @@ public:
 			else
 				little_buffer[0] = '4';
 			little_buffer[1] = 0;
-			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
+			if (sendto(srvr->s, little_buffer, strlen((const char*)little_buffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("Sign up reply sendto failed");
 			}
@@ -193,7 +193,7 @@ public:
 			else
 				little_buffer[0] = '0';
 			little_buffer[1] = 0;
-			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
+			if (sendto(srvr->s, little_buffer, strlen((const char*)little_buffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("Sign up reply sendto failed");
 			}
@@ -213,7 +213,7 @@ public:
 
 			sprintf((char*)(little_buffer), "%s", res.c_str());
 
-			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
+			if (sendto(srvr->s, little_buffer, strlen((const char*)little_buffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("Sign up reply sendto failed");
 			}
@@ -249,7 +249,7 @@ public:
 			else
 				little_buffer[0] = '8'; // if something is wrong
 			little_buffer[1] = 0;
-			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
+			if (sendto(srvr->s, little_buffer, strlen((const char*)little_buffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("Sign up reply sendto failed");
 			}
@@ -261,13 +261,13 @@ public:
 		}
 	}
 
-
-	void sendReply(unsigned char* buffer) {
-		if (sendto(sv->s, buffer, r, 0, (struct sockaddr*) & recievedAddr,
-			addresslength) < 0) {
-			perror("sendto failed");
-		}
+//just sends a reply with the buffer
+void sendReply(unsigned char* buffer) {
+	if (sendto(srvr->s, buffer, r, 0, (struct sockaddr*) & recievedAddr,
+		addresslength) < 0) {
+		perror("Failed to 'sendto'");
 	}
+}
 
 
 //loads in data from the user file into the user map the first time the server opens
@@ -280,7 +280,7 @@ void storeUsers(fstream& users) {
 	while (!users.eof()) {
 		getline(users, line);
 
-		//if there is a user, start reading
+		//if there is a user, get their username
 		if (line != "") {
 			nameLen = line.find(" ");
 			username = line.substr(0, nameLen);
@@ -300,6 +300,7 @@ void storeUsers(fstream& users) {
 
 		}
 	}
+
 	users.clear();
 }
 
@@ -315,7 +316,7 @@ void storeVerify(fstream& verify) {
 
 		getline(verify, line);
 
-		//gets the passwords associated with each user
+		//gets the usernames and their respective passwords
 		if (line != "") {
 			nameLen = line.find(" ");
 			username = line.substr(0, nameLen);
@@ -333,25 +334,27 @@ void storeVerify(fstream& verify) {
 
 //attempts to sign user up, and put data into respective files
 bool signUp(string username, string password) {
-	bool takenUsername = true;
+	bool validUsername = true;
 	string line, takenUsernames;
 	int nameLen;
 
 	verify.seekp(0);
 	while (!verify.eof()) {
 		getline(verify, line);
+		
+		//if there's a user
 		if (line != "") {
 			nameLen = line.find(" ");
 			takenUsernames = line.substr(0, nameLen);
 			if (takenUsernames == username)
-				takenUsername = false;
+				validUsername = false;
 		}
 	}
 
 	verify.clear();
 
-	//username not taken, so we can complete the sign up
-	if (takenUsername) {
+	//username is valid, so we can complete the sign up
+	if (validUsername) {
 		verify_map[username] = password;
 		users_map[username];
 		int ind = verify.tellg();
@@ -363,7 +366,7 @@ bool signUp(string username, string password) {
 		return true;
 	}
 
-	//if username taken
+	//if username taken aka invalid
 	else {
 		cout << "Username already exists, please choose another...\n";
 		return false;
@@ -373,22 +376,31 @@ bool signUp(string username, string password) {
 
 //checks if the username and password match.
 //Updates user map with user's ip, port, and login status
-bool login(string username, string password) {
-	bool flag = false;
+int login(string username, string password) {
+	bool nameFlag = false, passFlag = false;
+	int nameLen, passLen;
+	string line, currName, pass;
+
 	verify.seekp(0);
 	while (!verify.eof()) {
-		string line;
+
 		getline(verify, line);
 		if (line != "") {
-			int name_len;
-			name_len = line.find(" ");
-			string name = line.substr(0, name_len);
-			line = line.erase(0, name_len + 1);
-			int pass_len = line.find(" ");
-			string pass = line.substr(0, pass_len);
-			line = line.erase(0, pass_len + 1);
-			if (name == username && pass == password) {
-				flag = true;
+			nameLen = line.find(" ");
+			currName = line.substr(0, nameLen);
+			line = line.erase(0, nameLen + 1);
+
+			passLen = line.find(" ");
+			pass = line.substr(0, passLen);
+			line = line.erase(0, passLen + 1);
+
+			//if we've found the user
+			if (currName == username) 
+				nameFlag = true;
+			
+			//if the password is also true to this username
+			if (currName == username && pass == password) { 
+				passFlag = true;
 				break;
 			}
 		}
@@ -396,28 +408,38 @@ bool login(string username, string password) {
 
 	verify.clear();
 
-	if (!flag)
-		return false;
+	//entered the username doesn't even exist
+	if (!nameFlag)
+		return 0;
 
-	char portFromBuffer[LITTLE_BUFFER];
-	sprintf((char*)(portFromBuffer), "%u", sender_port);
-	users_map[username].currentIP = string(sender_ip);
-	users_map[username].port = string(portFromBuffer);
+	//password doesn't match
+	if (!passFlag)
+		return 5;	
 
+	//user was already logged in
+	if (users_map[username].online == true)	{
+		return 4;
+	}
+
+	char portFromSender[LITTLE_BUFFER];
+	sprintf((char*)(portFromSender), "%u", sender_port);
+	users_map[username].userIP = string(sender_ip);
+	users_map[username].userPort = string(portFromSender);
 	users_map[username].online = true;
-	//users_map[username].currentIP = ip;
-	users_map[username].port = port;
 	return true;
 }
 
+
+//logs user out by reseting all variables back
 bool logout(string username) {
 	bool wasOnline = users_map[username].online;
 	users_map[username].online = false;
-	users_map[username].currentIP = "";
-	users_map[username].port = "";
+	users_map[username].userIP = "";
+	users_map[username].userPort = "";
 
 	return wasOnline;
 }
+
 
 string viewer() {
 
@@ -426,13 +448,13 @@ string viewer() {
 		temp += x.first + "*";
 
 		if (x.second.online) {
-			temp += "Login status: 1\tUser's IP: ";
-			temp += x.second.currentIP + "\tUser's Port: ";
-			temp += x.second.port + "\tUser's Images: ";
+			temp += "Login status: ONLINE.\tUser's IP: ";
+			temp += x.second.userIP + ".\tUser's port: ";
+			temp += x.second.userPort + ".\tUser's Images: ";
 		}
 
 		else
-			temp += "OFFLINE.\t User's Images: ";
+			temp += "Login Status: OFFLINE.\tUser's Images: ";
 
 
 		for (int i = 0; i < x.second.imgs.size(); i++) {
@@ -450,9 +472,9 @@ int upload(string username, string img_name) {
 	string output = "";
 	int count = 0;
 
-	for (auto const& x : users_map) {
-		count++;						//keeps track of placement of username
-		if (x.first == username) {
+	for (auto const& curr : users_map) {
+		count++;	//keeps track of placement of username
+		if (curr.first == username) {
 			exists = true;
 			break;
 		}
@@ -500,7 +522,10 @@ int upload(string username, string img_name) {
 
 	users.close();
 	users.open("users.txt", fstream::out | fstream::in);
-	users << output;
+	users << output; 
+	users.close();
+    users.open("users.txt", fstream::out | fstream::in | fstream::app);
+    return 0;
 }
 
 ~DircServ() { users.close(); }
