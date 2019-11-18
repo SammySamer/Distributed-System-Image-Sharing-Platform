@@ -16,7 +16,7 @@ public:
   bool initializeServer(int port) {
 
     if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-      perror("Socket creation failed.");
+      perror("Socket creation failed");
       return 0;
     }
 
@@ -28,7 +28,7 @@ public:
     serverAddr.sin_port = htons(port);
 
     if (bind(s, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) {
-      perror("Failed to bind.");
+      perror("Failed to bind");
       return 0;
     }
   }

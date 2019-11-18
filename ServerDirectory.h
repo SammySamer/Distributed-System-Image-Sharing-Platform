@@ -59,7 +59,7 @@ public:
 		sv = new UDPSocketServer(port);
 		verify.open("verify.txt", fstream::out | fstream::in | fstream::app);
 		if (verify.fail())
-			cout << "verify file open failed!";
+			cout << "Verify file open failed!";
 
 		users.open("users.txt", fstream::out | fstream::in | fstream::app);
 		if (users.fail())
