@@ -1,6 +1,8 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
+#pragma once
+
 #include <cstring>
 #include <iostream>
 #include <netdb.h>
@@ -23,19 +25,21 @@ static inline bool is_base64(unsigned char c) {
 
 class Message {
 private:
-  MessageType message_type;		// Request or Reply
-  char *message;				// Message payload
-  string unmarshalledmessage;	// unmarshalled message
-  size_t message_size;			// Total length of the message
-  int rpc_id;					// Message ID
-  int operation;				// Number of the required operation
-  int didfrag;					// A flag to indicate if the message is fragmented or not (1 when fragmented)
-  int frag_count;				// A unique id for each fragment
-  int more_frag;				// A variable indicating if there are more fragments
+  MessageType message_type;		//Either request or reply
+  char *message;				      //Message payload
+  string unmarshalledmessage;	//The unmarshalled message
+  size_t messageSize;			    //Total length of the message
+  int OPCode;				          //Number of the required operation
+  int RPC_ID;					        //Message's ID
+  bool didfrag;					      //A flag to indicate if the message is fragmented or not (1 when fragmented)
+  int countFrag;				      //Unique id for each fragment
+  int moreFrag;				        //A variable indicating if there are more fragments
 
 public:
-  static std::string base64_encode(unsigned char const *bytes_to_encode, unsigned int in_len) {
-    std::string ret;
+
+
+  static string base64_encode(unsigned char const *bytes_to_encode, unsigned int in_len) {
+    string ret;
     int i = 0;
     int j = 0;
     unsigned char char_array_3[3];
@@ -77,13 +81,13 @@ public:
     return ret;
   }
 
-  static std::string base64_decode(std::string const &encoded_string) {
+  static string base64_decode(string const &encoded_string) {
     int in_len = encoded_string.size();
     int i = 0;
     int j = 0;
     int in_ = 0;
     unsigned char char_array_4[4], char_array_3[3];
-    std::string ret;
+    string ret;
 
     while (in_len-- && (encoded_string[in_] != '=') &&
            is_base64(encoded_string[in_])) {
@@ -122,18 +126,20 @@ public:
     return ret;
   }
 
-  Message(MessageType p_message_type, char *p_message, size_t p_message_size,
-          int operation, int p_rpc_id, int p_didfrag, int p_frag_count,
-          int p_more_frag) {
-    this->message_type = p_message_type;
+  Message(MessageType p_messageType, char *p_message, size_t p_messageSize,
+          int operation, int p_RPCID, int p_didfrag, int p_fragCount,
+          int p_moreFrag) {
+    this->message_type = p_messageType;
     this->message = p_message;
-    this->message_size = p_message_size;
-    this->operation = operation;
-    this->rpc_id = p_rpc_id;
+    this->messageSize = p_messageSize;
+    this->OPCode = operation;
+    this->RPC_ID = p_RPCID;
     this->didfrag = p_didfrag;
-    this->frag_count = p_frag_count;
-    this->more_frag = p_more_frag;
+    this->countFrag = p_fragCount;
+    this->moreFrag = p_moreFrag;
   }
+
+  
   Message(char *marshalled_base64) {
     string encoded_header = "";
     string encoded_msg = "";
@@ -160,7 +166,7 @@ public:
     int len = decoded_msg.length();
 
     this->unmarshalledmessage = decoded_msg;
-    this->message_size = len;
+    this->messageSize = len;
   }
   void parseMsgHeader(string decoded_header) {
 
@@ -206,20 +212,21 @@ public:
     else
       this->message_type = Reply;
 
-    this->operation = stoi(op);
-    this->rpc_id = stoi(rpcid);
-    this->message_size = stoi(msgsize);
+    this->OPCode = stoi(op);
+    this->RPC_ID = stoi(rpcid);
+    this->messageSize = stoi(msgsize);
     this->didfrag = stoi(fragd);
-    this->frag_count = stoi(fragc);
-    this->more_frag = stoi(mfrag);
+    this->countFrag = stoi(fragc);
+    this->moreFrag = stoi(mfrag);
   }
+
   string marshal() {
     string encoded_msg = "";
-    string headerinfo = to_string(message_type) + "-" + to_string(operation) +
-                        "-" + to_string(rpc_id) + "-" +
-                        to_string(message_size) + "-" + to_string(didfrag) +
-                        "-" + to_string(frag_count) + "-" +
-                        to_string(more_frag) + "*";
+    string headerinfo = to_string(message_type) + "-" + to_string(OPCode) +
+                        "-" + to_string(RPC_ID) + "-" +
+                        to_string(messageSize) + "-" + to_string(didfrag) +
+                        "-" + to_string(countFrag) + "-" +
+                        to_string(moreFrag) + "*";
 
     int n = headerinfo.length();
     unsigned int len = n + 1;
@@ -232,32 +239,32 @@ public:
     encoded_msg += " ";
 
     // encoding message payload
-    encoded_msg += base64_encode((const unsigned char *)message, message_size);
+    encoded_msg += base64_encode((const unsigned char *)message, messageSize);
 
     return encoded_msg;
   }
 
-  int getOperation() { return operation; }
-  int getRPCId() { return rpc_id; }
+  int getOperation() { return OPCode; }
+  int getRPCId() { return RPC_ID; }
   char *getMessage() { return message; }
   string getUnmarshalledMessage() { return unmarshalledmessage; }
-  size_t getMessageSize() { return message_size; }
+  size_t getMessageSize() { return messageSize; }
   MessageType getMessageType() { return message_type; }
 
   int getDidFrag() { return didfrag; }
-  int getFragCount() { return frag_count; }
-  int getMoreFrag() { return more_frag; }
-  void setOperation(int _operation) { this->operation = _operation; }
+  int getFragCount() { return countFrag; }
+  int getMoreFrag() { return moreFrag; }
+  void setOperation(int _operation) { this->OPCode = _operation; }
   void setMessage(char *message, size_t message_size) {
     this->message = message;
-    this->message_size = message_size;
+    this->messageSize = message_size;
   }
   void setMessageType(MessageType message_type) {
     this->message_type = message_type;
   }
   void setDidFrag(int p_didfrag) { this->didfrag = p_didfrag; }
-  void setFragCount(int p_frag_count) { this->frag_count = p_frag_count; }
-  void setMoreFrag(int p_more_frag) { this->more_frag = p_more_frag; }
+  void setFragCount(int p_frag_count) { this->countFrag = p_frag_count; }
+  void setMoreFrag(int p_more_frag) { this->moreFrag = p_more_frag; }
   ~Message() {}
 };
 #endif

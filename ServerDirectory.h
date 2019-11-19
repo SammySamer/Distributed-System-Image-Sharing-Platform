@@ -41,7 +41,7 @@ private:
 	map<string, string> verify_map;
 	map<string, userInfo> users_map;
 	bool connect;
-	int userPort;
+	int srvrPort;
 	char sender_ip[INET_ADDRSTRLEN];
 	uint16_t sender_port;
 
@@ -52,11 +52,11 @@ public:
 	socklen_t addresslength = sizeof(recievedAddr);
 
 	DircServ() {
-		cout << "Enter the port: ";
-		cin >> userPort;
+		cout << "Enter your port: ";
+		cin >> srvrPort;
 
 		connect = true;
-		srvr = new UDPSocketServer(userPort);
+		srvr = new UDPSocketServer(srvrPort);
 		verify.open("verify.txt", fstream::out | fstream::in | fstream::app);
 		if (verify.fail())
 			cout << "Verify file open failed!";
@@ -206,7 +206,7 @@ public:
 
 			string res = viewer();
 
-			cout << "View All. Text: " << res << endl;
+			cout << "Viewing all. Text: " << res << endl;
 
 			// Sign Up reply
 			memset(little_buffer, 0, sizeof(little_buffer));
@@ -260,6 +260,7 @@ public:
 			break;
 		}
 	}
+
 
 //just sends a reply with the buffer
 void sendReply(unsigned char* buffer) {
