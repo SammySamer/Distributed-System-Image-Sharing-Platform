@@ -4,7 +4,8 @@
 
 #include "Message.h"
 #include "UDPSocketClient.h"
-#include <QProcess>
+
+//#include <QProcess>
 #include <arpa/inet.h>
 #include <cstdio>
 #include <cstdlib>
