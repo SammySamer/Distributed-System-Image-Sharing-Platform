@@ -13,7 +13,7 @@
 using namespace std;
 
 int main() {
-	cout << "Welcome..... \n";
+	cout << "Welcome... \n";
 	DircServ DoS;
 	while (1) {
 		DoS.getRequest();
