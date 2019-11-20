@@ -1143,7 +1143,7 @@ public:
       string msg_view_request_reply =
           reply_update_request.getUnmarshalledMessage();
 
-      // Hassan's resend if lost
+      //send if lost
       int rpc_id_new = reply_update_request.getRPCId();
 
       if (rpc_id_new != requestID) // check if the request matches the reply
