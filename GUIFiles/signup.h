@@ -2,6 +2,7 @@
 #define SIGNUP_H
 
 #include <QDialog>
+#include "peer.h"
 
 namespace Ui {
 class Signup;
@@ -20,6 +21,7 @@ private slots:
 
 private:
     Ui::Signup *ui;
+    Peer *peer;
 };
 
 #endif // SIGNUP_H

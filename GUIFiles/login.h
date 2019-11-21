@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "profile.h"
+#include "peer.h"
 
 namespace Ui {
 class Login;
@@ -21,6 +22,7 @@ private slots:
 
 private:
     Ui::Login *ui;
+    Peer *peer;
 };
 
 #endif // LOGIN_H

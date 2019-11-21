@@ -124,6 +124,7 @@ public:
 				little_buffer[0] = '1';
 			else
 				little_buffer[0] = '0';
+
 			// sprintf((char *)(little_buffer), "%d", didsign);
 			little_buffer[1] = 0;
 			if (sendto(srvr->s, little_buffer, strlen((const char*)little_buffer), 0,
@@ -427,7 +428,7 @@ int login(string username, string password) {
 	users_map[username].userIP = string(sender_ip);
 	users_map[username].userPort = string(portFromSender);
 	users_map[username].online = true;
-	return true;
+	return 1;
 }
 
 

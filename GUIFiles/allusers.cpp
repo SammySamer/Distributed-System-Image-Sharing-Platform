@@ -1,5 +1,6 @@
 #include "allusers.h"
 #include "ui_allusers.h"
+#include "peer.h"
 #include <string>
 #include <vector>
 #include <bits/stdc++.h>

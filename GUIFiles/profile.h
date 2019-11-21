@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "allusers.h"
+#include "peer.h"
 
 namespace Ui {
 class Profile;
@@ -13,7 +14,7 @@ class Profile : public QDialog
     Q_OBJECT
 
 public:
-    explicit Profile(QWidget *parent = nullptr);
+    explicit Profile(QWidget *parent = nullptr, Peer *peer = nullptr);
     ~Profile();
 
 private slots:
@@ -21,6 +22,7 @@ private slots:
 
 private:
     Ui::Profile *ui;
+    Peer *peer;
 };
 
 #endif // PROFILE_H

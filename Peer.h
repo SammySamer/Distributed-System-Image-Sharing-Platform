@@ -28,7 +28,7 @@
 #include <string>
 #include <unistd.h>
 
-//#include <QProcess>
+#include <QProcess>
 
 using namespace std;
 #define BUFFER_SIZE 50000

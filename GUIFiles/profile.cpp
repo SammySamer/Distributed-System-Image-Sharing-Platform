@@ -1,14 +1,16 @@
 #include "profile.h"
 #include "ui_profile.h"
+#include <string>
 
-Profile::Profile(QWidget *parent) :
+Profile::Profile(QWidget *parent, Peer *peer) :
     QDialog(parent),
     ui(new Ui::Profile)
 {
     ui->setupUi(this);
 
     // PUT USERNAME
-    ui->label->setText("username");
+    QString uname = QString::fromStdString(peer->username);
+    ui->label->setText(uname);
 }
 
 Profile::~Profile()

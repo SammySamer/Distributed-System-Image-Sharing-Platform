@@ -136,6 +136,7 @@ public:
     this->frag_count = p_frag_count;
     this->more_frag = p_more_frag;
   }
+
   Message(char *marshalled_base64) {
     string encoded_header = "";
     string encoded_msg = "";
@@ -164,6 +165,7 @@ public:
     this->unmarshalledmessage = decoded_msg;
     this->message_size = len;
   }
+
   void parseMsgHeader(string decoded_header) {
 
     string msgtype, op, rpcid, msgsize, fragd, fragc, mfrag;
@@ -290,6 +292,7 @@ public:
     this->image_owner = p_image_owner;
   }
   void setImageName(string p_image_name) { this->image_name = p_image_name; }
+  
   ~Message() {}
 };
 #endif

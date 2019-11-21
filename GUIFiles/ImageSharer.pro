@@ -23,7 +23,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 CONFIG += c++11
-
+CONFIG += console
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
@@ -37,7 +37,10 @@ HEADERS += \
     login.h \
     signup.h \
     profile.h \
-    allusers.h
+    allusers.h \
+    peer.h \
+    message.h \
+    udpsocketclient.h
 
 FORMS += \
         mainwindow.ui \
