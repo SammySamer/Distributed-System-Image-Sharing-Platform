@@ -1,9 +1,5 @@
-
-#ifndef PEER_H
-#define PEER_H
-
-#include "UDPSocketClient.h"
 #include "message.h"
+#include "udpsocketclient.h"
 #include <QProcess>
 #include <arpa/inet.h>
 #include <cstdio>
@@ -21,19 +17,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include <string>
-
-#include <QDebug>
-#include <limits.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <thread>
 #include <unistd.h>
 #include <vector>
 using namespace std;
+//#include <limits.h> // for getcwd
 #define BUFFER_SIZE 50000
+
+#ifndef PEER_H
+#define PEER_H
 #define LITTLE_BUFFER_SIZE 50000
 #define PATH_MAX 500
 
+#include <QDebug>
+#include <limits.h>
+#include <string>
+#include <unistd.h>
+#include <string>
 struct three_element_group{
     string name;
     string imagename;
@@ -50,8 +52,9 @@ public:
   fstream imgfile;
   fstream Myimgsfile;
   UDPSocketClient *sv;
-  string ip = "10.65.101.32";
-  char *dos_ip = "127.0.0.1";
+  std::string ip = "10.65.101.32";
+  //char *dos_ip = "127.0.0.1";
+  char *dos_ip = "10.7.57.6";
   int dos_port = 8080;
   UDPSocketClient *sc;
   struct sockaddr_in dosSocket;
@@ -82,7 +85,7 @@ public:
   ~Peer() {}
 
   void listenPeer() {
-    cout << "Thread is listening..." << endl;
+    cout << "Ana Henaaaa Thread ba listen!! " << endl;
     while (getRequest()) {
     }
   }
@@ -91,7 +94,7 @@ public:
 
   bool getRequest() {
 
-    cout << "User's get request:" << endl;
+    cout << " user starts get request:" << endl;
 
     memset(Serverbuffer, 0, sizeof(Serverbuffer));
     // Receive Marshalled Message
@@ -200,6 +203,7 @@ public:
       cout << "imfirstfrag length " << fraglength << endl;
       // this->sendReply(reinterpret_cast<char*>(this->Serverbuffer));
 
+      // Hassan Changes
 
       current_received += r;
       unsigned char little_buffer[20000];
@@ -583,11 +587,15 @@ public:
     struct hostent *host;
     sa->sin_family = AF_INET;
     if ((host = gethostbyname(hostname)) == NULL) {
-        qDebug("Unknown Host");
+        qDebug("Un kown Host");
+
+       printf("Unknown host name\n");
       exit(-1);
     }
-    qDebug("Known Host Name");
 
+    qDebug("UWORKED");
+
+   printf("known host name\n");
     sa->sin_addr = *(struct in_addr *)(host->h_addr);
     sa->sin_port = htons(port);
   }
@@ -1491,14 +1499,12 @@ public:
       printf("Current %d.\n", current_length);
 
     } else
-      cout << "couldn't open file" << endl;
+      cout << "could'nt open file" << endl;
   }
 
   int getUsers() {
     char *msg_char = new char[1];
     msg_char[0] = ' ';
-
-    makeDestSA(&(this->dosSocket), dos_ip, dos_port); // make dos socket
     Message view_request(Request, msg_char, strlen(msg_char), 1100, ++requestID,
                          0, 0, 0);
     char marshalled_message[BUFFER_SIZE];
@@ -1514,50 +1520,44 @@ public:
     struct pollfd ss;
     ss.fd = sc->s;
     ss.events = POLLIN;
-
     map<string, vector<string>> temp_m; // for empty return
-
     while(no_tries <= timeout_loop && (npoll == 0 || npoll == -1)){ // while timeout, resend
-
         if ((n = sendto(sc->s, marshalled_message,
                         strlen((const char *)marshalled_message), 0,
                         (struct sockaddr *)&(this->dosSocket),
                         sizeof(struct sockaddr_in))) < 0){
-            qDebug("Sending Failed!");
             return 0; // send failed
         }
         npoll = poll(&ss, 1, timeout_time_ms);
         no_tries++;
     }
 
-      if (npoll == 0 || npoll == -1) { // return empty map
-        map<string, vector<string>> temp_m;
-        return 2;
-      } 
-       
-      else {
+       if (npoll == 0 || npoll == -1) { // return empty map
+           map<string, vector<string>> temp_m;
+         return 2;
+       } else {
 
-        cout << "getusers sent" << endl;
-        unsigned char little_buffer[LITTLE_BUFFER_SIZE];
-        memset(little_buffer, 0, sizeof(little_buffer));
-        struct sockaddr_in tempSocketAddress;
-        socklen_t tempAddrlen = sizeof(tempSocketAddress);
-        if ((r = recvfrom(sc->s, little_buffer, LITTLE_BUFFER_SIZE, 0,
-                          (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) < 0)
-          perror("Receive Failed");
-        cout << "getusers received" << endl;
-        int cc = 0;
-        string temp;
+    cout << "getusers sent" << endl;
+    unsigned char little_buffer[LITTLE_BUFFER_SIZE];
+    memset(little_buffer, 0, sizeof(little_buffer));
+    struct sockaddr_in tempSocketAddress;
+    socklen_t tempAddrlen = sizeof(tempSocketAddress);
+    if ((r = recvfrom(sc->s, little_buffer, LITTLE_BUFFER_SIZE, 0,
+                      (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) < 0)
+      perror("Receive Failed");
+    cout << "getusers received" << endl;
+    int cc = 0;
+    string temp;
 
-        cout << little_buffer << endl;
-        while (little_buffer[cc] != 0) {
-          temp.append(1, little_buffer[cc]);
-          cc++;
-        }
+    cout << little_buffer << endl;
+    while (little_buffer[cc] != 0) {
+      temp.append(1, little_buffer[cc]);
+      cc++;
+    }
 
-        this->users = retmap(temp);
-        return 1;
-      }
+    this->users = retmap(temp);
+    return 1;
+  }
   }
 
   map<string, vector<string>> retmap(string s) {

@@ -1,41 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AllUsers</class>
- <widget class="QDialog" name="AllUsers">
+ <class>Notifications</class>
+ <widget class="QDialog" name="Notifications">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>484</width>
-    <height>460</height>
+    <width>481</width>
+    <height>455</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>All Users</string>
+   <string>Dialog</string>
   </property>
-  <widget class="QPushButton" name="push_back">
-   <property name="geometry">
-    <rect>
-     <x>380</x>
-     <y>10</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Back</string>
-   </property>
-  </widget>
-  <widget class="QListWidget" name="listWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>80</y>
-     <width>461</width>
-     <height>321</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QPushButton" name="push_refresh">
    <property name="geometry">
     <rect>
@@ -49,30 +26,69 @@
     <string>Refresh</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="push_view">
+  <widget class="QPushButton" name="push_back">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>410</y>
-     <width>201</width>
+     <x>380</x>
+     <y>10</y>
+     <width>89</width>
      <height>25</height>
     </rect>
    </property>
    <property name="text">
-    <string>View Selected User Images</string>
+    <string>Back</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="push_approve">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>370</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Approve</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="push_delete">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>370</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lbl_result">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>400</y>
+     <width>451</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Approved</string>
    </property>
   </widget>
   <widget class="QLabel" name="lbl_time">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>440</y>
+     <y>430</y>
      <width>461</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Time</string>
+    <string>Time:</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -80,25 +96,32 @@
     <rect>
      <x>10</x>
      <y>50</y>
-     <width>67</width>
+     <width>101</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>All Users</string>
+    <string>Notifications:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="lbl_result">
+  <widget class="QListWidget" name="listWidget">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>410</y>
-     <width>241</width>
-     <height>17</height>
+     <x>5</x>
+     <y>71</y>
+     <width>471</width>
+     <height>291</height>
     </rect>
    </property>
-   <property name="text">
-    <string>Selected User is Offline</string>
+  </widget>
+  <widget class="QLineEdit" name="line_views">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>370</y>
+     <width>113</width>
+     <height>25</height>
+    </rect>
    </property>
   </widget>
  </widget>

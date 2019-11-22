@@ -3,8 +3,6 @@
 
 #include <QDialog>
 #include "allusers.h"
-#include "ui_profile.h"
-
 #include "peer.h"
 
 namespace Ui {
@@ -21,6 +19,8 @@ public:
 
 private slots:
     void on_allusersButton_clicked();
+
+    void on_notifications_clicked();
 
 private:
     Ui::Profile *ui;

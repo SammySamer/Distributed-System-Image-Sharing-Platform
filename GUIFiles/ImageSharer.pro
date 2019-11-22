@@ -30,7 +30,8 @@ SOURCES += \
     login.cpp \
     signup.cpp \
     profile.cpp \
-    allusers.cpp
+    allusers.cpp \
+    notifications.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,14 +41,16 @@ HEADERS += \
     allusers.h \
     peer.h \
     message.h \
-    UDPSocketClient.h
+    udpsocketclient.h \
+    notifications.h
 
 FORMS += \
         mainwindow.ui \
     login.ui \
     signup.ui \
     profile.ui \
-    allusers.ui
+    allusers.ui \
+    notifications.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -23,12 +23,12 @@ class Ui_Profile
 {
 public:
     QLabel *label;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QVBoxLayout *verticalLayout;
     QPushButton *allusersButton;
     QPushButton *pushButton_2;
     QPushButton *pushButton_3;
-    QPushButton *pushButton_4;
+    QPushButton *notifications;
     QPushButton *pushButton_5;
     QPushButton *pushButton_6;
 
@@ -40,33 +40,33 @@ public:
         label = new QLabel(Profile);
         label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(30, 30, 71, 16));
-        widget = new QWidget(Profile);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(200, 90, 151, 361));
-        verticalLayout = new QVBoxLayout(widget);
+        layoutWidget = new QWidget(Profile);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(200, 90, 151, 361));
+        verticalLayout = new QVBoxLayout(layoutWidget);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        allusersButton = new QPushButton(widget);
+        allusersButton = new QPushButton(layoutWidget);
         allusersButton->setObjectName(QStringLiteral("allusersButton"));
 
         verticalLayout->addWidget(allusersButton);
 
-        pushButton_2 = new QPushButton(widget);
+        pushButton_2 = new QPushButton(layoutWidget);
         pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
 
         verticalLayout->addWidget(pushButton_2);
 
-        pushButton_3 = new QPushButton(widget);
+        pushButton_3 = new QPushButton(layoutWidget);
         pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
 
         verticalLayout->addWidget(pushButton_3);
 
-        pushButton_4 = new QPushButton(widget);
-        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
+        notifications = new QPushButton(layoutWidget);
+        notifications->setObjectName(QStringLiteral("notifications"));
 
-        verticalLayout->addWidget(pushButton_4);
+        verticalLayout->addWidget(notifications);
 
-        pushButton_5 = new QPushButton(widget);
+        pushButton_5 = new QPushButton(layoutWidget);
         pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
 
         verticalLayout->addWidget(pushButton_5);
@@ -87,7 +87,7 @@ public:
         allusersButton->setText(QApplication::translate("Profile", "All Users", nullptr));
         pushButton_2->setText(QApplication::translate("Profile", "Shared Images", nullptr));
         pushButton_3->setText(QApplication::translate("Profile", "My Images", nullptr));
-        pushButton_4->setText(QApplication::translate("Profile", "Notifications", nullptr));
+        notifications->setText(QApplication::translate("Profile", "Notifications", nullptr));
         pushButton_5->setText(QApplication::translate("Profile", "Upload", nullptr));
         pushButton_6->setText(QApplication::translate("Profile", "Logout", nullptr));
     } // retranslateUi

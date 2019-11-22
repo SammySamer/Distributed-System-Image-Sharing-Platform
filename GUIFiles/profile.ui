@@ -26,7 +26,7 @@
     <string>username</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>200</x>
@@ -58,7 +58,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_4">
+     <widget class="QPushButton" name="notifications">
       <property name="text">
        <string>Notifications</string>
       </property>
