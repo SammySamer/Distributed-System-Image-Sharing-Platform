@@ -55,22 +55,26 @@ SOURCES       = ../GUIFiles/main.cpp \
 		../GUIFiles/login.cpp \
 		../GUIFiles/signup.cpp \
 		../GUIFiles/profile.cpp \
-		../GUIFiles/allusers.cpp moc_mainwindow.cpp \
+		../GUIFiles/allusers.cpp \
+		../GUIFiles/notifications.cpp moc_mainwindow.cpp \
 		moc_login.cpp \
 		moc_signup.cpp \
 		moc_profile.cpp \
-		moc_allusers.cpp
+		moc_allusers.cpp \
+		moc_notifications.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		login.o \
 		signup.o \
 		profile.o \
 		allusers.o \
+		notifications.o \
 		moc_mainwindow.o \
 		moc_login.o \
 		moc_signup.o \
 		moc_profile.o \
-		moc_allusers.o
+		moc_allusers.o \
+		moc_notifications.o
 DIST          = ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/common/unix.conf \
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/common/linux.conf \
@@ -240,7 +244,6 @@ DIST          = ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/spec_pre.prf
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/qt_config.prf \
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/linux-g++/qmake.conf \
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/spec_post.prf \
-		../GUIFiles/.qmake.stash \
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/toolchain.prf \
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/default_pre.prf \
@@ -267,12 +270,14 @@ DIST          = ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/spec_pre.prf
 		../GUIFiles/allusers.h \
 		../GUIFiles/peer.h \
 		../GUIFiles/message.h \
-		../GUIFiles/UDPSocketClient.h ../GUIFiles/main.cpp \
+		../GUIFiles/udpsocketclient.h \
+		../GUIFiles/notifications.h ../GUIFiles/main.cpp \
 		../GUIFiles/mainwindow.cpp \
 		../GUIFiles/login.cpp \
 		../GUIFiles/signup.cpp \
 		../GUIFiles/profile.cpp \
-		../GUIFiles/allusers.cpp
+		../GUIFiles/allusers.cpp \
+		../GUIFiles/notifications.cpp
 QMAKE_TARGET  = ImageSharer
 DESTDIR       = 
 TARGET        = ImageSharer
@@ -281,7 +286,7 @@ TARGET        = ImageSharer
 first: all
 ####### Build rules
 
-$(TARGET): ui_mainwindow.h ui_login.h ui_signup.h ui_profile.h ui_allusers.h $(OBJECTS)  
+$(TARGET): ui_mainwindow.h ui_login.h ui_signup.h ui_profile.h ui_allusers.h ui_notifications.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: ../GUIFiles/ImageSharer.pro ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/linux-g++/qmake.conf ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/spec_pre.prf \
@@ -453,7 +458,6 @@ Makefile: ../GUIFiles/ImageSharer.pro ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/qt_config.prf \
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/linux-g++/qmake.conf \
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/toolchain.prf \
 		../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/default_pre.prf \
@@ -647,7 +651,6 @@ Makefile: ../GUIFiles/ImageSharer.pro ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs
 ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/qt_config.prf:
 ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/linux-g++/qmake.conf:
 ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/spec_post.prf:
-.qmake.stash:
 ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/exclusive_builds.prf:
 ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/toolchain.prf:
 ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/default_pre.prf:
@@ -686,9 +689,9 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../GUIFiles/mainwindow.h ../GUIFiles/login.h ../GUIFiles/signup.h ../GUIFiles/profile.h ../GUIFiles/allusers.h ../GUIFiles/peer.h ../GUIFiles/message.h ../GUIFiles/UDPSocketClient.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../GUIFiles/main.cpp ../GUIFiles/mainwindow.cpp ../GUIFiles/login.cpp ../GUIFiles/signup.cpp ../GUIFiles/profile.cpp ../GUIFiles/allusers.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../GUIFiles/mainwindow.ui ../GUIFiles/login.ui ../GUIFiles/signup.ui ../GUIFiles/profile.ui ../GUIFiles/allusers.ui $(DISTDIR)/
+	$(COPY_FILE) --parents ../GUIFiles/mainwindow.h ../GUIFiles/login.h ../GUIFiles/signup.h ../GUIFiles/profile.h ../GUIFiles/allusers.h ../GUIFiles/peer.h ../GUIFiles/message.h ../GUIFiles/udpsocketclient.h ../GUIFiles/notifications.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../GUIFiles/main.cpp ../GUIFiles/mainwindow.cpp ../GUIFiles/login.cpp ../GUIFiles/signup.cpp ../GUIFiles/profile.cpp ../GUIFiles/allusers.cpp ../GUIFiles/notifications.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../GUIFiles/mainwindow.ui ../GUIFiles/login.ui ../GUIFiles/signup.ui ../GUIFiles/profile.ui ../GUIFiles/allusers.ui ../GUIFiles/notifications.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -720,9 +723,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++11 -Wall -W -dM -E -o moc_predefs.h ../../../../Qt5.11.3/5.11.3/gcc_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_login.cpp moc_signup.cpp moc_profile.cpp moc_allusers.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_login.cpp moc_signup.cpp moc_profile.cpp moc_allusers.cpp moc_notifications.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_login.cpp moc_signup.cpp moc_profile.cpp moc_allusers.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_login.cpp moc_signup.cpp moc_profile.cpp moc_allusers.cpp moc_notifications.cpp
 moc_mainwindow.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QMainWindow \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qmainwindow.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -841,29 +844,11 @@ moc_mainwindow.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QMainWi
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
 		../GUIFiles/peer.h \
-		../GUIFiles/UDPSocketClient.h \
 		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
-		ui_profile.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcoreapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qeventloop.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qguiapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qinputmethod.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QPushButton \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qpushbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qabstractbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QVBoxLayout \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qboxlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayoutitem.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qgridlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QWidget \
 		../GUIFiles/signup.h \
 		../GUIFiles/mainwindow.h \
 		moc_predefs.h \
@@ -983,30 +968,11 @@ moc_login.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QDialog \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
 		../GUIFiles/peer.h \
-		../GUIFiles/UDPSocketClient.h \
 		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
-		ui_profile.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcoreapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qeventloop.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qguiapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qinputmethod.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QPushButton \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qpushbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qabstractbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qicon.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QVBoxLayout \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qboxlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayoutitem.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qgridlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QWidget \
 		../GUIFiles/login.h \
 		moc_predefs.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/bin/moc
@@ -1117,8 +1083,8 @@ moc_signup.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QDialog \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qvector2d.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtouchdevice.h \
 		../GUIFiles/peer.h \
-		../GUIFiles/UDPSocketClient.h \
 		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
@@ -1239,30 +1205,11 @@ moc_profile.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QDialog \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
 		../GUIFiles/peer.h \
-		../GUIFiles/UDPSocketClient.h \
 		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
-		ui_profile.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcoreapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qeventloop.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qguiapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qinputmethod.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QPushButton \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qpushbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qabstractbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qicon.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QVBoxLayout \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qboxlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayoutitem.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qgridlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QWidget \
 		../GUIFiles/profile.h \
 		moc_predefs.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/bin/moc
@@ -1379,8 +1326,8 @@ moc_allusers.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QDialog \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
 		../GUIFiles/peer.h \
-		../GUIFiles/UDPSocketClient.h \
 		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
@@ -1389,13 +1336,128 @@ moc_allusers.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QDialog \
 		../../../../Qt5.11.3/5.11.3/gcc_64/bin/moc
 	/home/samer/Qt5.11.3/5.11.3/gcc_64/bin/moc $(DEFINES) --include /home/samer/Desktop/Phase_2/DistributedProject/build-ImageSharer-Desktop_Qt_5_11_3_GCC_64bit-Debug/moc_predefs.h -I/home/samer/Qt5.11.3/5.11.3/gcc_64/mkspecs/linux-g++ -I/home/samer/Desktop/Phase_2/DistributedProject/GUIFiles -I/home/samer/Qt5.11.3/5.11.3/gcc_64/include -I/home/samer/Qt5.11.3/5.11.3/gcc_64/include/QtWidgets -I/home/samer/Qt5.11.3/5.11.3/gcc_64/include/QtGui -I/home/samer/Qt5.11.3/5.11.3/gcc_64/include/QtCore -I. -I/usr/include/c++/6 -I/usr/include/x86_64-linux-gnu/c++/6 -I/usr/include/c++/6/backward -I/usr/lib/gcc/x86_64-linux-gnu/6/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../GUIFiles/allusers.h -o moc_allusers.cpp
 
+moc_notifications.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QDialog \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qdialog.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtguiglobal.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qglobal.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qconfig.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qtcore-config.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qsysinfo.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qlogging.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qflags.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qatomic.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qversiontagging.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtgui-config.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qwidget.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qobject.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstring.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qchar.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qbytearray.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qrefcount.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qarraydata.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstringliteral.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstringview.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qlist.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qiterator.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qhashfunctions.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qpair.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qbytearraylist.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstringlist.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qregexp.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcoreevent.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qmetatype.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qobject_impl.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qmargins.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qrect.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qsize.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qpoint.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpalette.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qcolor.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qrgb.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qrgba64.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qbrush.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qvector.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qmatrix.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpolygon.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qregion.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qdatastream.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qiodevice.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qline.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtransform.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpainterpath.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qimage.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpixelformat.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpixmap.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qshareddata.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qhash.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qfont.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qfontmetrics.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qfontinfo.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qcursor.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qkeysequence.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qevent.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qvariant.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qmap.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qdebug.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qtextstream.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qset.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qurl.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qurlquery.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qfile.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qfiledevice.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qvector2d.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtouchdevice.h \
+		../GUIFiles/peer.h \
+		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
+		../GUIFiles/notifications.h \
+		moc_predefs.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/bin/moc
+	/home/samer/Qt5.11.3/5.11.3/gcc_64/bin/moc $(DEFINES) --include /home/samer/Desktop/Phase_2/DistributedProject/build-ImageSharer-Desktop_Qt_5_11_3_GCC_64bit-Debug/moc_predefs.h -I/home/samer/Qt5.11.3/5.11.3/gcc_64/mkspecs/linux-g++ -I/home/samer/Desktop/Phase_2/DistributedProject/GUIFiles -I/home/samer/Qt5.11.3/5.11.3/gcc_64/include -I/home/samer/Qt5.11.3/5.11.3/gcc_64/include/QtWidgets -I/home/samer/Qt5.11.3/5.11.3/gcc_64/include/QtGui -I/home/samer/Qt5.11.3/5.11.3/gcc_64/include/QtCore -I. -I/usr/include/c++/6 -I/usr/include/x86_64-linux-gnu/c++/6 -I/usr/include/c++/6/backward -I/usr/lib/gcc/x86_64-linux-gnu/6/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/6/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../GUIFiles/notifications.h -o moc_notifications.cpp
+
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_mainwindow.h ui_login.h ui_signup.h ui_profile.h ui_allusers.h
+compiler_uic_make_all: ui_mainwindow.h ui_login.h ui_signup.h ui_profile.h ui_allusers.h ui_notifications.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_mainwindow.h ui_login.h ui_signup.h ui_profile.h ui_allusers.h
+	-$(DEL_FILE) ui_mainwindow.h ui_login.h ui_signup.h ui_profile.h ui_allusers.h ui_notifications.h
 ui_mainwindow.h: ../GUIFiles/mainwindow.ui \
 		../../../../Qt5.11.3/5.11.3/gcc_64/bin/uic
 	/home/samer/Qt5.11.3/5.11.3/gcc_64/bin/uic ../GUIFiles/mainwindow.ui -o ui_mainwindow.h
@@ -1415,6 +1477,10 @@ ui_profile.h: ../GUIFiles/profile.ui \
 ui_allusers.h: ../GUIFiles/allusers.ui \
 		../../../../Qt5.11.3/5.11.3/gcc_64/bin/uic
 	/home/samer/Qt5.11.3/5.11.3/gcc_64/bin/uic ../GUIFiles/allusers.ui -o ui_allusers.h
+
+ui_notifications.h: ../GUIFiles/notifications.ui \
+		../../../../Qt5.11.3/5.11.3/gcc_64/bin/uic
+	/home/samer/Qt5.11.3/5.11.3/gcc_64/bin/uic ../GUIFiles/notifications.ui -o ui_notifications.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -1545,30 +1611,19 @@ main.o: ../GUIFiles/main.cpp ../GUIFiles/mainwindow.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
 		../GUIFiles/peer.h \
-		../GUIFiles/UDPSocketClient.h \
 		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
-		ui_profile.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
+		../GUIFiles/signup.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qapplication.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcoreapplication.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qeventloop.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qguiapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qinputmethod.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QPushButton \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qpushbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qabstractbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QVBoxLayout \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qboxlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayoutitem.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qgridlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QWidget \
-		../GUIFiles/signup.h
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qinputmethod.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../GUIFiles/main.cpp
 
 mainwindow.o: ../GUIFiles/mainwindow.cpp ../GUIFiles/mainwindow.h \
@@ -1690,41 +1745,13 @@ mainwindow.o: ../GUIFiles/mainwindow.cpp ../GUIFiles/mainwindow.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
 		../GUIFiles/peer.h \
-		../GUIFiles/UDPSocketClient.h \
 		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
-		ui_profile.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcoreapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qeventloop.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qguiapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qinputmethod.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QPushButton \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qpushbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qabstractbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QVBoxLayout \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qboxlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayoutitem.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qgridlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QWidget \
 		../GUIFiles/signup.h \
-		ui_mainwindow.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QHBoxLayout \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QMenuBar \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qmenubar.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qmenu.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qaction.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qactiongroup.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QStatusBar \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qstatusbar.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QToolBar \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qtoolbar.h
+		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../GUIFiles/mainwindow.cpp
 
 login.o: ../GUIFiles/login.cpp ../GUIFiles/login.h \
@@ -1841,41 +1868,12 @@ login.o: ../GUIFiles/login.cpp ../GUIFiles/login.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
 		../GUIFiles/peer.h \
-		../GUIFiles/UDPSocketClient.h \
 		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
-		ui_profile.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcoreapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qeventloop.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qguiapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qinputmethod.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QPushButton \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qpushbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qabstractbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qicon.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QVBoxLayout \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qboxlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayoutitem.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qgridlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QWidget \
 		ui_login.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QFormLayout \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qformlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QLayout \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QLineEdit \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlineedit.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtextcursor.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtextformat.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpen.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtextoption.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSpacerItem \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QMessageBox \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qmessagebox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o login.o ../GUIFiles/login.cpp
@@ -1986,41 +1984,12 @@ signup.o: ../GUIFiles/signup.cpp ../GUIFiles/signup.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qvector2d.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtouchdevice.h \
 		../GUIFiles/peer.h \
-		../GUIFiles/UDPSocketClient.h \
 		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		ui_signup.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcoreapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qeventloop.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qguiapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qinputmethod.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QFormLayout \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qformlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QLayout \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayoutitem.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qboxlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qgridlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QLabel \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlabel.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QLineEdit \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlineedit.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtextcursor.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtextformat.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpen.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtextoption.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QPushButton \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qpushbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qabstractbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qicon.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QWidget \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QMessageBox \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qmessagebox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o signup.o ../GUIFiles/signup.cpp
@@ -2138,30 +2107,13 @@ profile.o: ../GUIFiles/profile.cpp ../GUIFiles/profile.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
 		../GUIFiles/peer.h \
-		../GUIFiles/UDPSocketClient.h \
 		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		ui_profile.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcoreapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qeventloop.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qguiapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qinputmethod.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QPushButton \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qpushbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qabstractbutton.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qicon.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QVBoxLayout \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qboxlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlayoutitem.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qgridlayout.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QWidget
+		../GUIFiles/notifications.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o profile.o ../GUIFiles/profile.cpp
 
 allusers.o: ../GUIFiles/allusers.cpp ../GUIFiles/allusers.h \
@@ -2276,21 +2228,136 @@ allusers.o: ../GUIFiles/allusers.cpp ../GUIFiles/allusers.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
 		../GUIFiles/peer.h \
-		../GUIFiles/UDPSocketClient.h \
 		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		ui_allusers.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcoreapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qeventloop.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qguiapplication.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qinputmethod.h
+		../GUIFiles/profile.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o allusers.o ../GUIFiles/allusers.cpp
+
+notifications.o: ../GUIFiles/notifications.cpp ../GUIFiles/notifications.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QDialog \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qdialog.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtguiglobal.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qglobal.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qconfig.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qtcore-config.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qsysinfo.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qlogging.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qflags.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qatomic.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qversiontagging.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtgui-config.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qwidget.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qobject.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstring.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qchar.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qbytearray.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qrefcount.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qarraydata.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstringliteral.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstringview.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qlist.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qiterator.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qhashfunctions.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qpair.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qbytearraylist.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstringlist.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qregexp.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcoreevent.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qmetatype.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qobject_impl.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qmargins.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qrect.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qsize.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qpoint.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpalette.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qcolor.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qrgb.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qrgba64.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qbrush.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qvector.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qmatrix.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpolygon.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qregion.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qdatastream.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qiodevice.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qline.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtransform.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpainterpath.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qimage.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpixelformat.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qpixmap.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qshareddata.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qhash.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qfont.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qfontmetrics.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qfontinfo.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qcursor.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qkeysequence.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qevent.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qvariant.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qmap.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qdebug.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qtextstream.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qset.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qurl.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qurlquery.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qfile.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qfiledevice.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qvector2d.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtouchdevice.h \
+		../GUIFiles/peer.h \
+		../GUIFiles/message.h \
+		../GUIFiles/udpsocketclient.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
+		ui_notifications.h \
+		../GUIFiles/profile.h \
+		../GUIFiles/allusers.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QtDebug \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/QList \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QLabel \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlabel.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o notifications.o ../GUIFiles/notifications.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
@@ -2306,6 +2373,9 @@ moc_profile.o: moc_profile.cpp
 
 moc_allusers.o: moc_allusers.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_allusers.o moc_allusers.cpp
+
+moc_notifications.o: moc_notifications.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_notifications.o moc_notifications.cpp
 
 ####### Install
 

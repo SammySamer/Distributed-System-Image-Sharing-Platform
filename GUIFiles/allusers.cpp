@@ -66,7 +66,7 @@ void AllUsers::on_push_back_clicked()
     profile.setModal(true);
     profile.exec();
 }
-
+/*
 void AllUsers::on_push_view_clicked()
 {
     if (ui->listWidget->currentRow() >= 0) {
@@ -150,3 +150,4 @@ void AllUsers::on_push_refresh_clicked()
     ui->lbl_result->setText("Check your internet connection!");
   }
 }
+*/

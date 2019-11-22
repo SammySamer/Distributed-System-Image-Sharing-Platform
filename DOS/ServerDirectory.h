@@ -153,7 +153,7 @@ public:
 			cout << "Pass: " << password << endl;
 			int didlogin = login(username, password);
 
-			cout << "Logged in? " << didlogin << endl;
+			cout << "Logged in status: " << didlogin << endl;
 
 			// Sign Up reply
 			memset(little_buffer, 0, sizeof(little_buffer));
@@ -492,7 +492,7 @@ string view() {
   }
 
 //uploads images into existing user profiles
-int upload(string username, string img_name) {
+int upload(string username, string imgName) {
 
 	bool exists = false;
 	string output = "";
@@ -508,50 +508,65 @@ int upload(string username, string img_name) {
 
 	//if user exists
 	if (exists) {
+		bool iFind = false;
 		string line, orig, name;
 		int nameLen;
+		
+		for (int f = 0; f < users_map[username].imgs.size() && !iFind; f++) {
+        	iFind = (users_map[username].imgs[f] == imgName);
+      	}
+		
+		if (!iFind) {
+			users_map[username].imgs.push_back(imgName);
 
-		users_map[username].imgs.push_back(img_name);
+			//to quickly find username
+			for (int i = 0; i < count; i++) {
+				getline(users, line);
+			}
 
-		//to quickly find username
-		for (int i = 0; i < count; i++) {
-			getline(users, line);
+			while (!users.eof()) {
+				getline(users, line);
+
+				if (line == "")
+					break;
+
+				orig = line;
+				nameLen = line.find(" ");
+				name = line.substr(0, nameLen);
+				line = line.erase(0, nameLen + 1);
+
+				if (name == username) {
+					output += username + " ";
+					for (int i = 0; i < users_map[username].imgs.size(); i++)
+						output += users_map[username].imgs[i] + " ";
+					output += "\n";
+				}
+
+				else {
+					output += orig + "\n";
+				}
+			}
 		}
 
-		while (!users.eof()) {
-			getline(users, line);
-
-			if (line == "")
-				break;
-
-			orig = line;
-			nameLen = line.find(" ");
-			name = line.substr(0, nameLen);
-			line = line.erase(0, nameLen + 1);
-
-			if (name == username) {
-				output += username + " ";
-				for (int i = 0; i < users_map[username].imgs.size(); i++)
-					output += users_map[username].imgs[i] + " ";
-				output += "\n";
-			}
-
-			else {
-				output += orig + "\n";
-			}
+		//the image was found
+		else {
+			return 9;
 		}
 	}
 
+	//username wasn't found
 	else {
 		cout << "Username not found\n";
+		return 0;
 	}
 
+	//if it all went successfully
 	users.close();
 	users.open("users.txt", fstream::out | fstream::in);
 	users << output; 
 	users.close();
     users.open("users.txt", fstream::out | fstream::in | fstream::app);
-    return 0;
+    return 1;
 }
 
 ~DircServ() { users.close(); }
