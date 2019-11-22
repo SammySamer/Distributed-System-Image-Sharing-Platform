@@ -133,9 +133,10 @@ public:
 			}
 
 		}
-		break; // end of sign_up
+		break;
 
-		case 1002: // login
+		//Login
+		case 1002:
 		{
 			int place = 0;
 			string username = "", password = "";
@@ -153,6 +154,7 @@ public:
 			int didlogin = login(username, password);
 
 			cout << "Logged in? " << didlogin << endl;
+
 			// Sign Up reply
 			memset(little_buffer, 0, sizeof(little_buffer));
 			if (didlogin == 1)
@@ -171,6 +173,7 @@ public:
 		}
 
 		break; // end of login
+
 
 		case 1003: // logout
 		{

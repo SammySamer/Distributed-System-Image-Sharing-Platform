@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include "allusers.h"
+#include "ui_profile.h"
+
 #include "peer.h"
 
 namespace Ui {

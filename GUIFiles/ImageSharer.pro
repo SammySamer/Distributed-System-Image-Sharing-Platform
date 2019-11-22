@@ -40,7 +40,7 @@ HEADERS += \
     allusers.h \
     peer.h \
     message.h \
-    udpsocketclient.h
+    UDPSocketClient.h
 
 FORMS += \
         mainwindow.ui \

@@ -1,5 +1,6 @@
 #include "profile.h"
-#include "ui_profile.h"
+#include <thread>
+#include <unistd.h>
 #include <string>
 
 Profile::Profile(QWidget *parent, Peer *peer) :
@@ -7,6 +8,12 @@ Profile::Profile(QWidget *parent, Peer *peer) :
     ui(new Ui::Profile)
 {
     ui->setupUi(this);
+
+    //peer->readfile();
+    //peer->read_my_images_file();
+    cout << "This is user " << peer->username << endl;
+    std::thread listenThread(&Peer::listenPeer, peer);
+    listenThread.detach();
 
     // PUT USERNAME
     QString uname = QString::fromStdString(peer->username);
@@ -22,8 +29,9 @@ void Profile::on_allusersButton_clicked()
 {
     // All Users Window goes here
     this->hide();
-    AllUsers users;
+    AllUsers users(this, peer);
     users.showUsers();
     users.setModal(true);
     users.exec();
+
 }

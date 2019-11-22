@@ -1,22 +1,36 @@
 #include "allusers.h"
 #include "ui_allusers.h"
-#include "peer.h"
 #include <string>
 #include <vector>
 #include <bits/stdc++.h>
 #include <iostream>
 
-AllUsers::AllUsers(QWidget *parent) :
+AllUsers::AllUsers(QWidget *parent, Peer *peer) :
     QDialog(parent),
-    ui(new Ui::AllUsers)
+    ui(new Ui::AllUsers),
+    peer(peer)
 {
     ui->setupUi(this);
 }
 
 void AllUsers::showUsers()
 {
+    Peer *temp;
+    temp = new Peer;
+
+    int noOfUsers;
+    int success = peer->getUsers();
+    qDebug("Success is %i", success);
+
     // GET NUMBER OF USERS
-    const int noOfUsers = 10;
+    if (success == 1) {
+        noOfUsers = 10;
+    }
+    else {
+        qDebug("Success is %i", success);
+        printf("Success is %i", success);
+        noOfUsers = 5;
+    }
 
     QLabel *label[noOfUsers];
     //QLabel *online[noOfUsers];

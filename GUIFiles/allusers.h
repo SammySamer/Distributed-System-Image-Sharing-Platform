@@ -7,6 +7,7 @@
 #include <QList>
 #include <QLabel>
 #include <QSizePolicy>
+#include "peer.h"
 
 
 namespace Ui {
@@ -18,12 +19,13 @@ class AllUsers : public QDialog
     Q_OBJECT
 
 public:
-    explicit AllUsers(QWidget *parent = nullptr);
+    explicit AllUsers(QWidget *parent = nullptr, Peer *peer = nullptr);
     ~AllUsers();
     void showUsers();
 
 private:
     Ui::AllUsers *ui;
+    Peer *peer;
 };
 
 #endif // ALLUSERS_H
