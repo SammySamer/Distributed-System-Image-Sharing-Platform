@@ -3,8 +3,8 @@
 #define SERVERDIRECTORY_H
 #pragma once
 
-#define MAIN_BUFFER 2500000
-#define LITTLE_BUFFER 15000
+#define MAIN_BUFFER 3000000
+#define LITTLE_BUFFER 20000
 
 #include <iostream>
 #include <fstream>
@@ -36,7 +36,7 @@ struct userInfo {
 
 class DircServ {
 private:
-	UDPSocketServer* srvr;
+	UDPSocketServer* sv;
 	fstream verify, users;
 	map<string, string> verify_map;
 	map<string, userInfo> users_map;
@@ -56,7 +56,7 @@ public:
 		cin >> srvrPort;
 
 		connect = true;
-		srvr = new UDPSocketServer(srvrPort);
+		sv = new UDPSocketServer(srvrPort);
 		verify.open("verify.txt", fstream::out | fstream::in | fstream::app);
 		if (verify.fail())
 			cout << "Verify file open failed!";
@@ -79,7 +79,7 @@ public:
 		memset(buffer, 0, sizeof(buffer));
 
 		//receive marshalled message
-		r = recvfrom(srvr->s, buffer, MAIN_BUFFER, 0,
+		r = recvfrom(sv->s, buffer, MAIN_BUFFER, 0,
 			(struct sockaddr*) & recievedAddr, &addresslength);
 
 		printf("Received Message = %s.\n", buffer);
@@ -127,7 +127,7 @@ public:
 
 			// sprintf((char *)(little_buffer), "%d", didsign);
 			little_buffer[1] = 0;
-			if (sendto(srvr->s, little_buffer, strlen((const char*)little_buffer), 0,
+			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("Sign up reply sendto failed");
 			}
@@ -166,7 +166,7 @@ public:
 			else
 				little_buffer[0] = '4';
 			little_buffer[1] = 0;
-			if (sendto(srvr->s, little_buffer, strlen((const char*)little_buffer), 0,
+			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("Sign up reply sendto failed");
 			}
@@ -197,7 +197,7 @@ public:
 			else
 				little_buffer[0] = '0';
 			little_buffer[1] = 0;
-			if (sendto(srvr->s, little_buffer, strlen((const char*)little_buffer), 0,
+			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("Sign up reply sendto failed");
 			}
@@ -208,7 +208,7 @@ public:
 		case 1100: // view
 		{
 
-			string res = viewer();
+			string res = view();
 
 			cout << "Viewing all. Text: " << res << endl;
 
@@ -217,7 +217,7 @@ public:
 
 			sprintf((char*)(little_buffer), "%s", res.c_str());
 
-			if (sendto(srvr->s, little_buffer, strlen((const char*)little_buffer), 0,
+			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("Sign up reply sendto failed");
 			}
@@ -253,7 +253,7 @@ public:
 			else
 				little_buffer[0] = '8'; // if something is wrong
 			little_buffer[1] = 0;
-			if (sendto(srvr->s, little_buffer, strlen((const char*)little_buffer), 0,
+			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("Sign up reply sendto failed");
 			}
@@ -265,10 +265,12 @@ public:
 		}
 	}
 
+  bool serveRequests() { getRequest(); }
+
 
 //just sends a reply with the buffer
 void sendReply(unsigned char* buffer) {
-	if (sendto(srvr->s, buffer, r, 0, (struct sockaddr*) & recievedAddr,
+	if (sendto(sv->s, buffer, r, 0, (struct sockaddr*) & recievedAddr,
 		addresslength) < 0) {
 		perror("Failed to 'sendto'");
 	}
@@ -469,6 +471,25 @@ string viewer() {
 	}
 	return temp;
 }
+
+string view() {
+    string ret = "";
+    for (auto const &x : users_map) {
+      ret += x.first + "*";
+      if (x.second.online) {
+        ret += "1&";
+        ret += x.second.userIP + "&";
+        ret += x.second.userPort + "&";
+      } else {
+        ret += "0&&&";
+      }
+      for (int i = 0; i < x.second.imgs.size(); i++) {
+        ret += x.second.imgs[i] + "#";
+      }
+      ret += "@";
+    }
+    return ret;
+  }
 
 //uploads images into existing user profiles
 int upload(string username, string img_name) {

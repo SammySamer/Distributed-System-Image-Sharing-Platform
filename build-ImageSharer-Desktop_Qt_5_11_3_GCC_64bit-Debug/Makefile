@@ -840,11 +840,12 @@ moc_mainwindow.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QMainWi
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlabel.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
-		../GUIFiles/Peer.h \
-		../GUIFiles/Message.h \
+		../GUIFiles/peer.h \
 		../GUIFiles/UDPSocketClient.h \
+		../GUIFiles/message.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		ui_profile.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
@@ -981,11 +982,12 @@ moc_login.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QDialog \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlabel.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
-		../GUIFiles/Peer.h \
-		../GUIFiles/Message.h \
+		../GUIFiles/peer.h \
 		../GUIFiles/UDPSocketClient.h \
+		../GUIFiles/message.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		ui_profile.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
@@ -1114,11 +1116,12 @@ moc_signup.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QDialog \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qfiledevice.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qvector2d.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtouchdevice.h \
-		../GUIFiles/Peer.h \
-		../GUIFiles/Message.h \
+		../GUIFiles/peer.h \
 		../GUIFiles/UDPSocketClient.h \
+		../GUIFiles/message.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		../GUIFiles/signup.h \
 		moc_predefs.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/bin/moc
@@ -1235,11 +1238,12 @@ moc_profile.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QDialog \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlabel.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
-		../GUIFiles/Peer.h \
-		../GUIFiles/Message.h \
+		../GUIFiles/peer.h \
 		../GUIFiles/UDPSocketClient.h \
+		../GUIFiles/message.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		ui_profile.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
@@ -1374,11 +1378,12 @@ moc_allusers.cpp: ../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QDialog \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlabel.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
-		../GUIFiles/Peer.h \
-		../GUIFiles/Message.h \
+		../GUIFiles/peer.h \
 		../GUIFiles/UDPSocketClient.h \
+		../GUIFiles/message.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		../GUIFiles/allusers.h \
 		moc_predefs.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/bin/moc
@@ -1539,11 +1544,12 @@ main.o: ../GUIFiles/main.cpp ../GUIFiles/mainwindow.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlabel.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
-		../GUIFiles/Peer.h \
-		../GUIFiles/Message.h \
+		../GUIFiles/peer.h \
 		../GUIFiles/UDPSocketClient.h \
+		../GUIFiles/message.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		ui_profile.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
@@ -1683,11 +1689,12 @@ mainwindow.o: ../GUIFiles/mainwindow.cpp ../GUIFiles/mainwindow.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlabel.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
-		../GUIFiles/Peer.h \
-		../GUIFiles/Message.h \
+		../GUIFiles/peer.h \
 		../GUIFiles/UDPSocketClient.h \
+		../GUIFiles/message.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		ui_profile.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
@@ -1833,11 +1840,12 @@ login.o: ../GUIFiles/login.cpp ../GUIFiles/login.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlabel.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
-		../GUIFiles/Peer.h \
-		../GUIFiles/Message.h \
+		../GUIFiles/peer.h \
 		../GUIFiles/UDPSocketClient.h \
+		../GUIFiles/message.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		ui_profile.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
@@ -1869,8 +1877,7 @@ login.o: ../GUIFiles/login.cpp ../GUIFiles/login.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtextoption.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSpacerItem \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QMessageBox \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qmessagebox.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qmessagebox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o login.o ../GUIFiles/login.cpp
 
 signup.o: ../GUIFiles/signup.cpp ../GUIFiles/signup.h \
@@ -1978,11 +1985,12 @@ signup.o: ../GUIFiles/signup.cpp ../GUIFiles/signup.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qfiledevice.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qvector2d.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qtouchdevice.h \
-		../GUIFiles/Peer.h \
-		../GUIFiles/Message.h \
+		../GUIFiles/peer.h \
 		../GUIFiles/UDPSocketClient.h \
+		../GUIFiles/message.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		ui_signup.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
@@ -2013,10 +2021,6 @@ signup.o: ../GUIFiles/signup.cpp ../GUIFiles/signup.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qabstractbutton.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtGui/qicon.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QWidget \
-		../GUIFiles/peer.h \
-		../GUIFiles/udpsocketclient.h \
-		../GUIFiles/message.h \
-		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QMessageBox \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qmessagebox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o signup.o ../GUIFiles/signup.cpp
@@ -2133,11 +2137,12 @@ profile.o: ../GUIFiles/profile.cpp ../GUIFiles/profile.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlabel.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
-		../GUIFiles/Peer.h \
-		../GUIFiles/Message.h \
+		../GUIFiles/peer.h \
 		../GUIFiles/UDPSocketClient.h \
+		../GUIFiles/message.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		ui_profile.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \
@@ -2270,11 +2275,12 @@ allusers.o: ../GUIFiles/allusers.cpp ../GUIFiles/allusers.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qlabel.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QSizePolicy \
-		../GUIFiles/Peer.h \
-		../GUIFiles/Message.h \
+		../GUIFiles/peer.h \
 		../GUIFiles/UDPSocketClient.h \
+		../GUIFiles/message.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QProcess \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/qprocess.h \
+		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QDebug \
 		ui_allusers.h \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtCore/QVariant \
 		../../../../Qt5.11.3/5.11.3/gcc_64/include/QtWidgets/QApplication \

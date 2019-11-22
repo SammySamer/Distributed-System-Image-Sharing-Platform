@@ -19,7 +19,7 @@ void AllUsers::showUsers()
     temp = new Peer;
 
     int noOfUsers;
-    int success = peer->getUsers();
+    int success = temp->getUsers();
     qDebug("Success is %i", success);
 
     // GET NUMBER OF USERS
