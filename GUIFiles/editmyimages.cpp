@@ -1,7 +1,9 @@
 #include "editmyimages.h"
 #include "ui_editmyimages.h"
 #include "profile.h"
+
 #include <QString>
+#include <QMessageBox>
 #include <string>
 
 EditMyImages::EditMyImages(QWidget *parent, Peer *peer, QString imagename) :
@@ -35,10 +37,12 @@ void EditMyImages::on_push_refresh_clicked()
     ui->listWidget->clear();
     ui->lbl_time->setText(
         QString::fromStdString("Last Time Refreshed: " + peer->getCurrentTime()));
-    ui->lbl_time->setStyleSheet("QLabel { color : white; }");
+
     ui->lbl_result->setVisible(false);
+
     vector<pair<string, int>> selectedViewers =
         peer->myimages[imagename.toStdString()];
+
     for (int i = 0; i < selectedViewers.size(); i++) {
       ui->listWidget->addItem(QString::fromStdString(
           "Viewer: " + selectedViewers[i].first +
@@ -54,49 +58,39 @@ void EditMyImages::on_push_update_views_clicked()
     int noViews = ui->line_views->text().toInt();
     if (noViews < 0) {
       ui->lbl_result->setVisible(true);
-      ui->lbl_result->setText("Please, add the number of views >= 0");
+      ui->lbl_result->setText("Number of views can't be negative...");
       ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-    } else {
+    }
+
+    else {
       vector<pair<string, int>> selectedViewers =
-          peer->myimages[imagename.toStdString()];
+      peer->myimages[imagename.toStdString()];
       string viewer = selectedViewers[ui->listWidget->currentRow()].first;
       int resultUsers = peer->update_views_by_owner(viewer, imagename.toStdString(), noViews);
-    if(resultUsers == 1){
-      ui->lbl_result->setVisible(true);
-      ui->lbl_result->setStyleSheet("QLabel { color : green; }");
-      ui->lbl_result->setText("Views updated!");
-    }
-    else if(resultUsers == 12){
-      ui->lbl_result->setVisible(true);
-      ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-      ui->lbl_result->setText("DoS Offline!");
-    }
-    else if(resultUsers == 10){
-      ui->lbl_result->setVisible(true);
-      ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-      ui->lbl_result->setText("Check your internet connection!"); // send failed
-    }
-    else if(resultUsers == 0){
-      ui->lbl_result->setVisible(true);
-      ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-      ui->lbl_result->setText("Check your internet connection!"); // update_views_by_owner at viewer failed!
-    }
-    else{
-      ui->lbl_result->setVisible(true);
-      ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-      ui->lbl_result->setText("Check your internet connection!"); // something wrong
-    }
-    }
-        } else{
+
+        if(resultUsers == 1){
             ui->lbl_result->setVisible(true);
-            ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-            ui->lbl_result->setText("Please, enter the amount of views you want!");
+            ui->lbl_result->setStyleSheet("QLabel { color : green; }");
+            ui->lbl_result->setText("Views updated!");
         }
 
-    } else {
+        //0, 10, or 12
+        else
+            QMessageBox::critical(this, "Request Failed",
+                                "Connection Error: DoS or User OFFLINE!");
+    }
+        }
+        else {
+            ui->lbl_result->setVisible(true);
+            ui->lbl_result->setStyleSheet("QLabel { color : red; }");
+            ui->lbl_result->setText("Enter the amount of views...");
+        }
+
+    }
+    else {
       ui->lbl_result->setVisible(true);
       ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-      ui->lbl_result->setText("Please, select an image!");
+      ui->lbl_result->setText("Select any image!");
     }
 }
 

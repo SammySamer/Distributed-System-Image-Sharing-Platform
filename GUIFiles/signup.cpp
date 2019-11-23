@@ -34,7 +34,7 @@ void Signup::on_registerButton_clicked()
     newUser = peer->sign_up(username_string,password_string);
 
     if (newUser == 1)
-        QMessageBox::critical(this, "Registration Succeeded",
+        QMessageBox::information(this, "Registration Succeeded",
                                "You are now registered!");
 
     else if (newUser == 0)
@@ -44,7 +44,7 @@ void Signup::on_registerButton_clicked()
         QMessageBox::critical(this, "Registration Failed",
                               "Timeout Error with DoS!");
     else if (newUser == 3)
-        QMessageBox::critical(this, "Login Failed",
+        QMessageBox::critical(this, "Registration Failed",
                               "Special Characters not allowed!");
     else if (newUser == 5)
         QMessageBox::critical(this, "Registration Failed",
@@ -52,7 +52,7 @@ void Signup::on_registerButton_clicked()
 
     //6 or 8
     else
-        QMessageBox::critical(this, "Login Failed",
+        QMessageBox::critical(this, "Registration Failed",
                               "Connection error: DoS or User OFFLINE!");
 
 

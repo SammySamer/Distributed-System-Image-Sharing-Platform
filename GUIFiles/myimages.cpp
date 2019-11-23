@@ -28,17 +28,18 @@ void MyImages::on_push_view_clicked()
 {
     if (ui->listWidget->currentRow() >= 0) {
         EditMyImages secd(this, peer, ui->listWidget->currentItem()->text());
-    secd.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
-                        Qt::CustomizeWindowHint);
-    secd.setModal(true);
-    secd.exec();
+        secd.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
+                            Qt::CustomizeWindowHint);
+        secd.setModal(true);
+        secd.exec();
 
-    ui->lbl_result->setVisible(false);
+        ui->lbl_result->setVisible(false);
     }
+
     else {
         ui->lbl_result->setVisible(true);
-    ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-    ui->lbl_result->setText("Please, select an image!");
+        ui->lbl_result->setStyleSheet("QLabel { color : red; }");
+        ui->lbl_result->setText("Please, select an image!");
     }
 }
 

@@ -11,13 +11,8 @@ Login::Login(QWidget *parent) :
     ui->setupUi(this);
 }
 
-Login::~Login()
-{
-    delete ui;
-}
+Login::~Login() { delete ui; }
 
-
-void Login::on_push_back_clicked() { Login::close(); }
 
 void Login::on_loginButton_clicked()
 {

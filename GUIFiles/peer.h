@@ -463,16 +463,6 @@ public:
       cout << "User: " << username << endl;
       cout << "Requested Image Name: " << imageName << endl;
       cout << "New Requested No of Views: " << NewNoViews << endl;
-      //      vector<pair<string, int>> v_vectors;
-      //      v_vectors = myimages[imageName];
-      //      for (int i = 0; i < v_vectors.size();i++){
-      //         if (v_vectors[i].first == username)
-      //             v_vectors[i].second = stoi(NewNoViews);
-
-      //      }
-
-      //      myimages[imageName] = v_vectors;
-      //      memset(Serverlittle_buffer, 0, sizeof(Serverlittle_buffer));
 
       bool c = updateimg(imageName, username, stoi(NewNoViews));
       if (!c) {
@@ -1279,13 +1269,6 @@ public:
     newviewer.first = viewerName;
     newviewer.second = nViews;
     map<string, vector<pair<string, int>>>::iterator it_2;
-//    bool found = false;
-//    for (it_2 = myimages.begin(); it_2 != myimages.end() && !found; it_2++) {
-
-//        found =
-
-
-//    }
     myimages[selectedImage].push_back(newviewer);
 
     struct sockaddr_in
@@ -1293,9 +1276,7 @@ public:
                         // who has requested my image)
 
     string remote_peer_ip = images[1]; // retriveing the ip of the receiver
-    int remote_peer_port =
-        std::stoi(images[2], nullptr,
-                  0); // Refaay //Retreiving the port no of the receiver
+    int remote_peer_port = stoi(images[2], nullptr, 0);
     cout << "Remote IP " << remote_peer_ip << ", port " << remote_peer_port
          << endl;
 

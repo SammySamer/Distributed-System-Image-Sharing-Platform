@@ -2,6 +2,7 @@
 #include "ui_notifications.h"
 #include "profile.h"
 #include <string>
+#include <QMessageBox>
 
 Notifications::Notifications(QWidget *parent, Peer *peer) :
     QDialog(parent),
@@ -12,12 +13,12 @@ Notifications::Notifications(QWidget *parent, Peer *peer) :
 
     ui->line_views->setValidator(new QIntValidator); // only numbers
     ui->lbl_time->setText(
-        QString::fromStdString("Last Time Refreshed: " + peer->getCurrentTime()));
+        QString::fromStdString("Time Refreshed: " + peer->getCurrentTime()));
 
     //ui->lbl_time->setStyleSheet("QLabel { color : white; }");
-    ui->line_views->setPlaceholderText("No. of Views");
+    ui->line_views->setPlaceholderText("# of Views");
     ui->lbl_result->setVisible(false);
-    int resultUsers = peer->getUsers(); // because approve needs IP & port
+    int resultUsers = peer->getUsers();
     if(resultUsers == 1){
     for (int i = 0; i < peer->requests_buffer.size(); i++) {
       string req;
@@ -34,7 +35,9 @@ Notifications::Notifications(QWidget *parent, Peer *peer) :
                                  peer->requests_buffer[i].second.imagename + " "+to_string(peer->requests_buffer[i].second.views)+ " times"));
         }
     }
-
+    else
+        QMessageBox::critical(this, "Request Failed",
+                              "Getting User List Failed!");
 
 }
 
@@ -59,7 +62,8 @@ void Notifications::on_push_approve_clicked() {
               ui->lbl_result->setVisible(true);
               ui->lbl_result->setText("Please, add the number of views > 0");
               ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-            } else {
+            }
+            else {
               cout << "ApprovedUser " << usname << " imagename " << imname << endl;
               std::thread SendImageThread(&Peer::send_image, peer, usname, imname,
                                           noViews);
@@ -70,44 +74,38 @@ void Notifications::on_push_approve_clicked() {
 
             }
         }
-        else if (opcode == 2004){ // req = " approved you to view ";
+
+        //requesting to view
+        else if (opcode == 2004){
             ui->lbl_result->setVisible(true);
-            ui->lbl_result->setText("You were approved! Nothing to approve!");
+            ui->lbl_result->setText("You were already approved before!");
             ui->lbl_result->setStyleSheet("QLabel { color : red; }");
         }
-        else if (opcode == 2007){ // req = " want to update his number of views to ";
+
+        //updating views
+        else if (opcode == 2007){
             if (noViews < 0) {
               ui->lbl_result->setVisible(true);
               ui->lbl_result->setText("Please, add the number of views >= 0");
               ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-            } else {
-              cout << "Updating views of " << usname << " imagename " << imname << endl;
+            }
+
+            else {
+              cout << "Updating views of " << usname << " for image name "
+                   << imname << endl;
+
               int resultUsers = peer->update_views_by_owner(usname, imname, noViews);
+
               if(resultUsers == 1){
               ui->lbl_result->setVisible(true);
               ui->lbl_result->setText("Updated!");
               ui->lbl_result->setStyleSheet("QLabel { color : green; }");
               }
-              else if(resultUsers == 12){
-                ui->lbl_result->setVisible(true);
-                ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-                ui->lbl_result->setText("DoS Offline!");
-              }
-              else if(resultUsers == 10){
-                ui->lbl_result->setVisible(true);
-                ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-                ui->lbl_result->setText("Check your internet connection!"); // Getusers send failed!
-              }
-              else if(resultUsers == 0){
-                ui->lbl_result->setVisible(true);
-                ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-                ui->lbl_result->setText("Check your internet connection!"); // update_views_by_owner at viewer failed!
-              }
-              else{
-                ui->lbl_result->setVisible(true);
-                ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-                ui->lbl_result->setText("Check your internet connection!");
-              }
+
+              //0, 10 and 12
+              else
+                  QMessageBox::critical(this, "Request Failed",
+                                        "Connection Error: DoS or User OFFLINE!");
             }
         }
         else{
@@ -131,7 +129,7 @@ void Notifications::on_push_approve_clicked() {
             req = " want to update his number of views to ";
           else
             req = " Check your internet connection ";
-          ui->listWidget->addItem(
+            ui->listWidget->addItem(
               QString::fromStdString(peer->requests_buffer[i].second.name + req +
                                      peer->requests_buffer[i].second.imagename + " "+to_string(peer->requests_buffer[i].second.views)+ "times"));
 
@@ -170,26 +168,20 @@ void Notifications::on_push_refresh_clicked() { // refill list
 
   }
   }
-  else if(resultUsers == 2){
-    ui->lbl_result->setVisible(true);
-    ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-    ui->lbl_result->setText("DoS Offline!");
-  }
-  else if(resultUsers == 0){
-    ui->lbl_result->setVisible(true);
-    ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-    ui->lbl_result->setText("Getusers send failed!");
-  }
-  else{
-    ui->lbl_result->setVisible(true);
-    ui->lbl_result->setStyleSheet("QLabel { color : red; }");
-    ui->lbl_result->setText("Check your internet connection!");
-  }
+  else if(resultUsers == 2)
+      QMessageBox::critical(this, "Request Failed",
+                            "Timeout Error with DoS!");
+
+  else if(resultUsers == 0)
+      QMessageBox::critical(this, "Request Failed",
+                            "GetUsers Failed!");
+  else
+      QMessageBox::critical(this, "Request Failed",
+                            "Connection Error: DoS or User OFFLINE!");
 }
 
 void Notifications::on_push_delete_clicked() {
   if (ui->listWidget->currentRow() >= 0) {
-    // Refaay: should reply with request disapproved
 
     peer->requests_buffer.erase(peer->requests_buffer.begin() +
                                 ui->listWidget->currentRow());
@@ -198,11 +190,11 @@ void Notifications::on_push_delete_clicked() {
     for (int i = 0; i < peer->requests_buffer.size(); i++) {
       string req;
       if (peer->requests_buffer[i].first == 2002)
-        req = " wants to view ";
+        req = " wants to view: ";
       else if (peer->requests_buffer[i].first == 2003)
-        req = " approved you to view ";
+        req = " gave you approval to view: ";
       else if (peer->requests_buffer[i].first == 2007)
-        req = " want to update his number of views to ";
+        req = " wants to update their number of views to: ";
       else
         req = " Check your internet connection ";
       ui->listWidget->addItem(
@@ -212,7 +204,8 @@ void Notifications::on_push_delete_clicked() {
     ui->lbl_result->setVisible(true);
     ui->lbl_result->setStyleSheet("QLabel { color : green; }");
     ui->lbl_result->setText("Notification deleted!");
-  } else {
+  }
+  else {
     ui->lbl_result->setVisible(true);
     ui->lbl_result->setStyleSheet("QLabel { color : red; }");
     ui->lbl_result->setText("Please, select a notification!");

@@ -15,6 +15,8 @@ Profile::Profile(QWidget *parent, Peer *peer) :
 {
     ui->setupUi(this);
     ui->lbl_upload_successful->setVisible(false);
+    ui->lbl_time->setText(
+        QString::fromStdString("Login Time: " + peer->getCurrentTime()));
 
     // PUT USERNAME
     QString uname = QString::fromStdString(peer->username);

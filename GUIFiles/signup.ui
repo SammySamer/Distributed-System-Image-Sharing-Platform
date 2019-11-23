@@ -29,10 +29,10 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>130</y>
-     <width>371</width>
-     <height>151</height>
+     <x>70</x>
+     <y>180</y>
+     <width>401</width>
+     <height>101</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -43,11 +43,12 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="user"/>
-    </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="pass"/>
+     <widget class="QLineEdit" name="pass">
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+     </widget>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_3">
@@ -55,6 +56,9 @@
        <string>Password</string>
       </property>
      </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="user"/>
     </item>
    </layout>
   </widget>

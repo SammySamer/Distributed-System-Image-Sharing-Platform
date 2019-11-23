@@ -46,7 +46,7 @@ allusers_images::allusers_images(QWidget *parent, Peer *peer, QString s)
             //check if already shared
             if(peer->sharedimgs.count(fullImageName.toUtf8().constData()) == 0){
                 int result = peer->request_image(selectedUser.toUtf8().constData(),
-                                                 img.toUtf8().constData(), ui->line_views->text().toInt());
+                            img.toUtf8().constData(), ui->line_views->text().toInt());
 
                 if (result == 1) {
                   ui->lbl_result->setStyleSheet("QLabel { color : green; }");
