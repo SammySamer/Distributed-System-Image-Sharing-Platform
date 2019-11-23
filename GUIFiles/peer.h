@@ -85,28 +85,29 @@ public:
   ~Peer() {}
 
   void listenPeer() {
-    cout << "Ana Henaaaa Thread ba listen!! " << endl;
+    cout << "Thread created and is listening" << endl;
     while (getRequest()) {
     }
   }
 
-  // Server Functions Start HEREEE
+
+/* ------------------ SERVER FUNCTIONS ----------------------- */
+
 
   bool getRequest() {
 
-    cout << " user starts get request:" << endl;
+    cout << "Peer's getting requests: " << endl;
 
     memset(Serverbuffer, 0, sizeof(Serverbuffer));
+
     // Receive Marshalled Message
     struct sockaddr_in tempSocketAddress;
     socklen_t tempAddrlen = sizeof(tempSocketAddress);
     if ((r = recvfrom(sv->s, Serverbuffer, BUFFER_SIZE, 0,
                       (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) <
         0) {
-      cout << "Receive Failed! " << endl;
+      cout << "Failed to receive marshalled message..." << endl;
     }
-
-    cout << "r  " << r << endl;
 
     inet_ntop(AF_INET, &(tempSocketAddress.sin_addr), sender_ip,
               INET_ADDRSTRLEN);
@@ -116,7 +117,6 @@ public:
     Message requestMsg(reinterpret_cast<char *>(Serverbuffer));
     int op_id_request = requestMsg.getOperation();
     int rpcid_request = requestMsg.getRPCId();
-    //    size_t msgsize = requestMsg.getMessageSize();
     string msg = requestMsg.getUnmarshalledMessage();
 
     switch (op_id_request) {
@@ -1644,6 +1644,7 @@ public:
     return false;
   }
 
+
   void updatefile() {
         imgfile.close();
       // call this function when the user is signing out, to update the file
@@ -1672,9 +1673,10 @@ public:
       Myimgsfile.close();
     }
 
+
+    //called when the user logs in to read from their sharedimages.txt
+    //to be loaded into our program's map
     void readfile() {
-      // call this function once, when the user logs in to fill in the map from
-      // what is in the file
 
       string shared_images_filename = this->username + "_sharedimages.txt";
       imgfile.open(shared_images_filename, fstream::out | fstream::in | fstream::app);
@@ -1697,35 +1699,40 @@ public:
       imgfile.clear();
     }
 
+    //called when the user logs in to read from their images.txt
+    //to be loaded into our program's map
     void read_my_images_file() {
-      // call this function once, when the user logs in to fill in the map from
-      // what is in the file
-     string myimages_filename = this->username + "_images.txt";
+      string myimages_filename = this->username + "_images.txt";
       Myimgsfile.open(myimages_filename, fstream::out | fstream::in | fstream::app);
       Myimgsfile.seekp(0);
       pair<string, int> p;
+
       while (!Myimgsfile.eof()) {
         string line;
         getline(Myimgsfile, line);
+
         if (line != "") {
           int name_len, viewer_len, view_len;
           name_len = line.find(" ");
           string fullimagename = line.substr(0, name_len);
           line = line.erase(0, name_len + 1);
+
           if(line != "")
-         while (line != "")
-          {
-              viewer_len = line.find(" ");
-              string viewer = line.substr(0, viewer_len);
-              line = line.erase(0, viewer_len + 1);
-              view_len = line.find(" ");
-              string views = line.substr(0, view_len);
-              line = line.erase(0, view_len + 1);
-              int view = stoi(views);
-              p.first = viewer;
-              p.second = view;
-              myimages[fullimagename].push_back(p);
-          }else
+            while (line != "")
+            {
+                  viewer_len = line.find(" ");
+                  string viewer = line.substr(0, viewer_len);
+                  line = line.erase(0, viewer_len + 1);
+                  view_len = line.find(" ");
+                  string views = line.substr(0, view_len);
+                  line = line.erase(0, view_len + 1);
+                  int view = stoi(views);
+                  p.first = viewer;
+                  p.second = view;
+                  myimages[fullimagename].push_back(p);
+              }
+              
+            else
               myimages[fullimagename].push_back(p);
 
         }

@@ -25,9 +25,12 @@ Profile::Profile(QWidget *parent, Peer *peer) :
             SLOT(close()));
 
     peer->readfile();
-    //peer->read_my_images_file();
+    peer->read_my_images_file();
+
     ui->lbl_upload_successful->setVisible(false);
+
     cout << "User's name: " << peer->username << endl;
+
     std::thread listenThread(&Peer::listenPeer, peer);
     cout << "User thread is listening..." << endl;
     listenThread.detach();
@@ -41,17 +44,19 @@ Profile::~Profile()
 void Profile::on_allusersButton_clicked()
 {
     // All Users Window goes here
-    this->hide();
     AllUsers users (this,peer);
+    users.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
+                         Qt::CustomizeWindowHint);
     users.setModal(true);
     users.exec();
 }
 
 void Profile::on_notifications_clicked()
 {
-    //VEIWING NOTIFOCATIONS
-    this->hide();
+    //VIEWING NOTIFICATIONS
     Notifications notifications (this,peer);
+    notifications.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
+                         Qt::CustomizeWindowHint);
     notifications.setModal(true);
     notifications.exec();
 
@@ -60,8 +65,9 @@ void Profile::on_notifications_clicked()
 void Profile::on_push_myimages_clicked()
 {
     //VEIWING MY IMAGES
-    this->hide();
     MyImages myimages (this,peer);
+    myimages.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
+                         Qt::CustomizeWindowHint);
     myimages.setModal(true);
     myimages.exec();
 }
@@ -69,15 +75,17 @@ void Profile::on_push_myimages_clicked()
 void Profile::on_upload_images_clicked()
 {
     QString imagePath = QFileDialog::getOpenFileName(
-        this, tr("Open Image"), "", tr("JPEG (*.jpg *.jpeg);;PNG (*.png)"));
+        this, tr("Open Image"), "", tr("JPEG (*.jpg *.jpeg);;"));
 
     int upload_stat = peer->upload(imagePath.toStdString());
 
     if (upload_stat == 1) { // Successful
-      ui->lbl_upload_successful->setVisible(true);
-      ui->lbl_upload_successful->setText(QString("Uploaded Successfully!"));
-      ui->lbl_upload_successful->setStyleSheet("QLabel { color : green; }");
+        peer->update_my_images_file();
+        ui->lbl_upload_successful->setVisible(true);
+        ui->lbl_upload_successful->setText(QString("Uploaded Successfully!"));
+        ui->lbl_upload_successful->setStyleSheet("QLabel { color : green; }");
     }
+
     else if (upload_stat == 0) {
       ui->lbl_upload_successful->setVisible(true);
       ui->lbl_upload_successful->setText(QString("Username not registered!"));
@@ -117,8 +125,8 @@ void Profile::on_upload_images_clicked()
 void Profile::on_push_logout_clicked() {
   int logged = peer->logout();
   if (logged == 1) {
-      QMessageBox::critical(this, "Login Failed",
-                            "Timeout Error with DoS!");
+      QMessageBox::critical(this, "Logout Successful!",
+                            "Ciao!");
     usleep(2000);
     peer->updatefile();
     peer->update_my_images_file();

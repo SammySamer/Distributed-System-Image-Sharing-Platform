@@ -38,10 +38,6 @@ Notifications::Notifications(QWidget *parent, Peer *peer) :
 
 }
 
-Notifications::~Notifications()
-{
-    delete ui;
-}
 
 void Notifications::on_push_approve_clicked() {
   if (ui->listWidget->currentRow() >= 0) {
@@ -223,10 +219,5 @@ void Notifications::on_push_delete_clicked() {
   }
 }
 
-void Notifications::on_push_back_clicked()
-{
-    this->hide();
-    Profile profile (this,peer);
-    profile.setModal(true);
-    profile.exec();
-}
+Notifications::~Notifications() { delete ui; }
+void Notifications::on_push_back_clicked() { Notifications::close();}

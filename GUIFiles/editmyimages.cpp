@@ -30,19 +30,6 @@ EditMyImages::EditMyImages(QWidget *parent, Peer *peer, QString imagename) :
     }
 }
 
-EditMyImages::~EditMyImages()
-{
-    delete ui;
-}
-
-void EditMyImages::on_push_back_clicked()
-{
-    this->hide();
-    Profile profile (this,peer);
-    profile.setModal(true);
-    profile.exec();
-}
-
 void EditMyImages::on_push_refresh_clicked()
 {
     ui->listWidget->clear();
@@ -112,3 +99,6 @@ void EditMyImages::on_push_update_views_clicked()
       ui->lbl_result->setText("Please, select an image!");
     }
 }
+
+EditMyImages::~EditMyImages() { delete ui; }
+void EditMyImages::on_push_back_clicked() { EditMyImages::close(); }

@@ -7,7 +7,9 @@
 #include <QList>
 #include <QLabel>
 #include <QSizePolicy>
+
 #include "peer.h"
+#include "allusers_images.h"
 
 
 namespace Ui {
@@ -26,12 +28,13 @@ public:
 private slots:
     void on_push_back_clicked();
 
-    //void on_push_view_clicked();
+    void on_push_view_clicked();
     
-    //void on_push_refresh_clicked();
+    void on_push_refresh_clicked();
     
 private:
     Ui::AllUsers *ui;
+    allusers_images *images;
     Peer *peer;
 };
 

@@ -11,32 +11,18 @@ MyImages::MyImages(QWidget *parent, Peer *peer) :
     ui->setupUi(this);
     ui->lbl_result->setVisible(false);
     ui->lbl_user->setText(QString::fromStdString(peer->username));
-    ui->lbl_time->setText(
-        QString::fromStdString("Last Time Refreshed: " + peer->getCurrentTime()));
-   // ui->lbl_time->setStyleSheet("QLabel { color : white; }");
+    ui->lbl_time->setText(QString::fromStdString
+                          ("Time Refreshed: " + peer->getCurrentTime()));
 
     map<string, vector<pair<string, int>>> my_images_copy = peer->myimages;
 
     map<string, vector<pair<string, int>>>::iterator it;
 
     for (it = my_images_copy.begin(); it != my_images_copy.end(); it++) {
-      //cout << "My Images " << it->first << endl;
-      ui->listWidget->addItem(QString::fromStdString(it->first));
+        ui->listWidget->addItem(QString::fromStdString(it->first));
     }
 }
 
-MyImages::~MyImages()
-{
-    delete ui;
-}
-
-void MyImages::on_push_back_clicked()
-{
-    this->hide();
-    Profile profile (this,peer);
-    profile.setModal(true);
-    profile.exec();
-}
 
 void MyImages::on_push_view_clicked()
 {
@@ -55,5 +41,9 @@ void MyImages::on_push_view_clicked()
     ui->lbl_result->setText("Please, select an image!");
     }
 }
+
+
+MyImages::~MyImages(){ delete ui; }
+void MyImages::on_push_back_clicked(){ MyImages::close(); }
 
 

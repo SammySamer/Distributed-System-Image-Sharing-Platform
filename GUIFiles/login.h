@@ -20,6 +20,8 @@ public:
 private slots:
     void on_loginButton_clicked();
 
+    void on_push_back_clicked();
+
 private:
     Ui::Login *ui;
     Peer *peer;

@@ -85,7 +85,7 @@ public:
   ~Peer() {}
 
   void listenPeer() {
-    cout << "Ana Henaaaa Thread ba listen!! " << endl;
+    cout << "Thread has started!" << endl;
     while (getRequest()) {
     }
   }
@@ -94,7 +94,7 @@ public:
 
   bool getRequest() {
 
-    cout << " user starts get request:" << endl;
+    cout << "Peer's Getting Requests: " << endl;
 
     memset(Serverbuffer, 0, sizeof(Serverbuffer));
     // Receive Marshalled Message
@@ -145,16 +145,20 @@ public:
       cout << "Requested Image Name: " << imageName << endl;
 
       memset(Serverlittle_buffer, 0, sizeof(Serverlittle_buffer));
-       three_element_group r;
-       r.name = username;
-       r.imagename = imageName;
-       r.views = stoi(views_str);
-      pair<int, three_element_group> pair_temp =
-          make_pair(2002, r);
+      three_element_group r;
+      r.name = username;
+      r.imagename = imageName;
+      r.views = stoi(views_str);
+      pair<int, three_element_group> pair_temp = make_pair(2002, r);
       bool pair_found = false;
+
       for (int e = 0; e < requests_buffer.size() && !pair_found; e++) {
-          pair_found = (requests_buffer[e].first == pair_temp.first && requests_buffer[e].second.name == pair_temp.second.name && requests_buffer[e].second.imagename == pair_temp.second.imagename && requests_buffer[e].second.views == pair_temp.second.views);
+          pair_found = (requests_buffer[e].first == pair_temp.first && 
+                        requests_buffer[e].second.name == pair_temp.second.name && 
+                        requests_buffer[e].second.imagename == pair_temp.second.imagename && 
+                        requests_buffer[e].second.views == pair_temp.second.views);
       }
+
       if (!pair_found) {
         requests_buffer.push_back(pair_temp);
         Serverlittle_buffer[0] = '1';
@@ -201,9 +205,6 @@ public:
       cout << "Received Message Length = \n"
            << strlen((const char *)Serverbuffer);
       cout << "imfirstfrag length " << fraglength << endl;
-      // this->sendReply(reinterpret_cast<char*>(this->Serverbuffer));
-
-      // Hassan Changes
 
       current_received += r;
       unsigned char little_buffer[20000];
@@ -765,10 +766,13 @@ public:
         npoll = poll(&ss, 1, timeout_time_ms);
         no_tries++;
     }
-
+        
+      //TIMEOUT
        if (npoll == 0 || npoll == -1) {
          return 2;
-       } else {
+       } 
+       
+       else {
 
     unsigned char little_buffer[10];
     memset(little_buffer, 0, sizeof(little_buffer));
@@ -907,7 +911,7 @@ public:
         cout << images[1] << endl;
         string temp_ip = images[1];
         cout << images[2] << endl;
-        int remote_peer_port = std::stoi(images[2], nullptr, 0); // Refaay
+        int remote_peer_port = std::stoi(images[2], nullptr, 0); 
         cout << "Remote IP " << temp_ip << ", port " << remote_peer_port << endl;
         char remote_peer_address[1024];
         char little_buffer[100];
@@ -1659,9 +1663,9 @@ public:
       Myimgsfile.close();
     }
 
+    //called when the user logs in to read from their sharedimages.txt
+    //to be loaded into our program's map
     void readfile() {
-      // call this function once, when the user logs in to fill in the map from
-      // what is in the file
 
       string shared_images_filename = this->username + "_sharedimages.txt";
       imgfile.open(shared_images_filename, fstream::out | fstream::in | fstream::app);
@@ -1684,35 +1688,38 @@ public:
       imgfile.clear();
     }
 
+    //called when the user logs in to read from their images.txt
+    //to be loaded into our program's map
     void read_my_images_file() {
-      // call this function once, when the user logs in to fill in the map from
-      // what is in the file
      string myimages_filename = this->username + "_images.txt";
       Myimgsfile.open(myimages_filename, fstream::out | fstream::in | fstream::app);
       Myimgsfile.seekp(0);
       pair<string, int> p;
+
       while (!Myimgsfile.eof()) {
         string line;
         getline(Myimgsfile, line);
+
         if (line != "") {
           int name_len, viewer_len, view_len;
           name_len = line.find(" ");
           string fullimagename = line.substr(0, name_len);
           line = line.erase(0, name_len + 1);
           if(line != "")
-         while (line != "")
-          {
-              viewer_len = line.find(" ");
-              string viewer = line.substr(0, viewer_len);
-              line = line.erase(0, viewer_len + 1);
-              view_len = line.find(" ");
-              string views = line.substr(0, view_len);
-              line = line.erase(0, view_len + 1);
-              int view = stoi(views);
-              p.first = viewer;
-              p.second = view;
-              myimages[fullimagename].push_back(p);
-          }else
+            while (line != "")
+            {
+                viewer_len = line.find(" ");
+                string viewer = line.substr(0, viewer_len);
+                line = line.erase(0, viewer_len + 1);
+                view_len = line.find(" ");
+                string views = line.substr(0, view_len);
+                line = line.erase(0, view_len + 1);
+                int view = stoi(views);
+                p.first = viewer;
+                p.second = view;
+                myimages[fullimagename].push_back(p);
+            }
+          else
               myimages[fullimagename].push_back(p);
 
         }

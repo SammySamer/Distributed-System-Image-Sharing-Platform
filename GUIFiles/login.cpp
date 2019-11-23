@@ -16,6 +16,9 @@ Login::~Login()
     delete ui;
 }
 
+
+void Login::on_push_back_clicked() { Login::close(); }
+
 void Login::on_loginButton_clicked()
 {
     // CHECK LOGIN CREDENTIALS
@@ -65,3 +68,4 @@ void Login::on_loginButton_clicked()
                               "Connection error: DoS or User OFFLINE!");
 
 }
+
