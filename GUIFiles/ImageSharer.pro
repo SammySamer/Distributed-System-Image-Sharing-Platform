@@ -31,7 +31,9 @@ SOURCES += \
     signup.cpp \
     profile.cpp \
     allusers.cpp \
-    notifications.cpp
+    notifications.cpp \
+    myimages.cpp \
+    editmyimages.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -42,7 +44,9 @@ HEADERS += \
     peer.h \
     message.h \
     udpsocketclient.h \
-    notifications.h
+    notifications.h \
+    myimages.h \
+    editmyimages.h
 
 FORMS += \
         mainwindow.ui \
@@ -50,7 +54,9 @@ FORMS += \
     signup.ui \
     profile.ui \
     allusers.ui \
-    notifications.ui
+    notifications.ui \
+    myimages.ui \
+    editmyimages.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

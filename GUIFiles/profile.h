@@ -22,6 +22,10 @@ private slots:
 
     void on_notifications_clicked();
 
+    void on_push_myimages_clicked();
+
+    void on_upload_images_clicked();
+
 private:
     Ui::Profile *ui;
     Peer *peer;

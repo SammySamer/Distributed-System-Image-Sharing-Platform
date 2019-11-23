@@ -51,7 +51,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="push_myimages">
       <property name="text">
        <string>My Images</string>
       </property>
@@ -65,7 +65,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_5">
+     <widget class="QPushButton" name="upload_images">
       <property name="text">
        <string>Upload</string>
       </property>
@@ -84,6 +84,32 @@
    </property>
    <property name="text">
     <string>Logout</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lbl_upload_successful">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>460</y>
+     <width>171</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Uploaded Successfully!</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lbl_time">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>480</y>
+     <width>531</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Time</string>
    </property>
   </widget>
  </widget>
