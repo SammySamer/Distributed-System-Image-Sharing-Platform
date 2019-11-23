@@ -13,7 +13,7 @@
 using namespace std;
 
 int main() {
-	cout << "Welcome...? \n";
+	cout << "ImageSharer's Directory of Service has opened!\n";
 	DircServ DoS;
 	while (1) {
 		DoS.getRequest();

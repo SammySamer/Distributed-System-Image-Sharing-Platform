@@ -491,16 +491,17 @@ string view() {
     return ret;
   }
 
+/*
 //uploads images into existing user profiles
-int upload(string username, string imgName) {
+int upload1(string username, string imgName) {
 
 	bool exists = false;
-	string output = "";
+	string updated = "";
 	int count = 0;
 
-	for (auto const& curr : users_map) {
-		count++;	//keeps track of placement of username
-		if (curr.first == username) {
+	for (auto const& x : users_map) {
+		//count++;
+		if (x.first == username) {
 			exists = true;
 			break;
 		}
@@ -509,65 +510,156 @@ int upload(string username, string imgName) {
 	//if user exists
 	if (exists) {
 		bool iFind = false;
-		string line, orig, name;
-		int nameLen;
 		
 		for (int f = 0; f < users_map[username].imgs.size() && !iFind; f++) {
         	iFind = (users_map[username].imgs[f] == imgName);
       	}
 		
+		//if the image wasn't found, so we should add it in
 		if (!iFind) {
 			users_map[username].imgs.push_back(imgName);
 
 			//to quickly find username
-			for (int i = 0; i < count; i++) {
-				getline(users, line);
-			}
+			//for (int i = 0; i < count - 1; i++) {
+			//	getline(users, line);
+			//}
 
 			while (!users.eof()) {
+				string line;
 				getline(users, line);
 
 				if (line == "")
 					break;
 
-				orig = line;
-				nameLen = line.find(" ");
-				name = line.substr(0, nameLen);
+				string main = line;
+				int nameLen = line.find(" ");
+				string name = line.substr(0, nameLen);
 				line = line.erase(0, nameLen + 1);
 
 				if (name == username) {
-					output += username + " ";
+					updated += username + " ";
 					for (int i = 0; i < users_map[username].imgs.size(); i++)
-						output += users_map[username].imgs[i] + " ";
-					output += "\n";
+						updated += users_map[username].imgs[i] + " ";
+					updated += "\n";
 				}
 
 				else {
-					output += orig + "\n";
+					updated += main + "\n";
 				}
 			}
 		}
 
 		//the image was found
 		else {
+			users.close();
+			users.open("users.txt", fstream::out | fstream::in);
+			users << updated;
+			users.close();
+			users.open("users.txt", fstream::out | fstream::in | fstream::app);
 			return 9;
 		}
 	}
 
 	//username wasn't found
 	else {
-		cout << "Username not found\n";
+      	users.close();
+      	users.open("users.txt", fstream::out | fstream::in);
+      	users << updated;
+      	users.close();
+      	users.open("users.txt", fstream::out | fstream::in | fstream::app);
 		return 0;
 	}
 
 	//if it all went successfully
 	users.close();
-	users.open("users.txt", fstream::out | fstream::in);
-	users << output; 
-	users.close();
+    users.open("users.txt", fstream::out | fstream::in);
+    users << updated;
+    users.close();
     users.open("users.txt", fstream::out | fstream::in | fstream::app);
-    return 1;
+	return 1;
+}*/
+
+
+//uploads images into existing user profiles
+int upload(string username, string img_name) { 
+	
+	bool exists = false; 	//check if user exists or not
+	bool findImage = false;	//check if user already has the image
+	string updated = "";
+
+	for (auto const &x : users_map) {
+		if (x.first == username) {
+			exists = true;
+			break;
+		}
+	}
+
+	if (exists) {
+		for (int e = 0; e < users_map[username].imgs.size() && !findImage; e++) {
+			findImage = users_map[username].imgs[e] == img_name;
+		}
+
+		if (!findImage) {
+			users_map[username].imgs.push_back(img_name);
+			users.seekg(0);
+			while (!users.eof()) {
+				string line;
+				getline(users, line);
+
+				if (line == "")
+					break;
+
+				string first = line;
+				int nameLen;
+				nameLen = line.find(" ");
+				string name = line.substr(0, nameLen);
+				line = line.erase(0, nameLen + 1);
+
+				if (name == username) {
+				updated += username + " ";
+
+				for (int i = 0; i < users_map[username].imgs.size(); i++)
+					updated += users_map[username].imgs[i] + " ";
+
+				updated += "\n";
+				} 
+
+				else {
+				updated += first + "\n";
+				}
+			}
+		} 
+		
+		//image was found
+		else {
+		users.close();
+		users.open("users.txt", fstream::out | fstream::in);
+		users << updated;
+		users.close();
+		users.open("users.txt", fstream::out | fstream::in | fstream::app);
+		return 9;
+		}
+	} 
+
+	//username not found
+	else {
+		users.close();
+		users.open("users.txt", fstream::out | fstream::in);
+		users << updated;
+		users.close();
+		users.open("users.txt", fstream::out | fstream::in | fstream::app);
+		return 0;
+	}
+
+	//if all went successfully
+	users.close();
+	users.open("users.txt", fstream::out | fstream::in);
+	users << updated;
+	users.close();
+	users.open("users.txt", fstream::out | fstream::in | fstream::app);
+	return 1;
 }
+
 
 ~DircServ() { users.close(); }
 
