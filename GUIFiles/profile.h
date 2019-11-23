@@ -26,6 +26,8 @@ private slots:
 
     void on_upload_images_clicked();
 
+    void on_push_logout_clicked();
+
 private:
     Ui::Profile *ui;
     Peer *peer;

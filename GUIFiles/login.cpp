@@ -18,7 +18,7 @@ Login::~Login()
 
 void Login::on_loginButton_clicked()
 {
-    // CHECK CREDENTIALS
+    // CHECK LOGIN CREDENTIALS
     int validCred = 100;
 
     QString username, password;
@@ -31,8 +31,6 @@ void Login::on_loginButton_clicked()
 
     validCred = peer->login(username_string,password_string);
 
-    qDebug("%i",validCred);
-
     if (validCred == 1)
     {
         // Profile Window goes here
@@ -44,8 +42,26 @@ void Login::on_loginButton_clicked()
         profile.setModal(true);
         profile.exec();
     }
+
+    else if (validCred == 0)
+        QMessageBox::critical(this, "Login Failed",
+                              "User not registered!");
+    else if (validCred == 2)
+        QMessageBox::critical(this, "Login Failed",
+                              "Timeout Error with DoS!");
+    else if (validCred == 3)
+        QMessageBox::critical(this, "Login Failed",
+                              "Special Characters not allowed!");
+    else if (validCred == 4)
+        QMessageBox::critical(this, "Login Failed",
+                              "User already logged in!");
+    else if (validCred == 5)
+        QMessageBox::critical(this, "Login Failed",
+                              "Incorrect password entered!");
+
+    //6 or 8
     else
-    {
-        QMessageBox::critical(this, "Login Failed", "Wrong Credentials!");
-    }
+        QMessageBox::critical(this, "Login Failed",
+                              "Connection error: DoS or User OFFLINE!");
+
 }

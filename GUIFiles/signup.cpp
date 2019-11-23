@@ -32,16 +32,28 @@ void Signup::on_registerButton_clicked()
     std::string password_string = password.toUtf8().constData();
 
     newUser = peer->sign_up(username_string,password_string);
-    //const char* NU=newUser.c_str();
-    qDebug("%i",newUser);
 
     if (newUser == 1)
-    {
-         QMessageBox::critical(this, "Registration Succeeded", "You are now registered!");
-    }
-    else//ADJUST LATER
-    {
-         QMessageBox::critical(this, "Registration Failed", "User with same username already exists!");
-    }
+        QMessageBox::critical(this, "Registration Succeeded",
+                               "You are now registered!");
+
+    else if (newUser == 0)
+        QMessageBox::critical(this, "Registration Failed",
+                              "Specials character not allowed!");
+    else if (newUser == 2)
+        QMessageBox::critical(this, "Registration Failed",
+                              "Timeout Error with DoS!");
+    else if (newUser == 3)
+        QMessageBox::critical(this, "Login Failed",
+                              "Special Characters not allowed!");
+    else if (newUser == 5)
+        QMessageBox::critical(this, "Registration Failed",
+                              "User already registered!");
+
+    //6 or 8
+    else
+        QMessageBox::critical(this, "Login Failed",
+                              "Connection error: DoS or User OFFLINE!");
+
 
 }

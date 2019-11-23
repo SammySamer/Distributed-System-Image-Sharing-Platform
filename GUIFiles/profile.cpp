@@ -6,6 +6,7 @@
 #include <qfiledialog.h>
 #include <thread>
 #include <unistd.h>
+#include <QMessageBox>
 
 Profile::Profile(QWidget *parent, Peer *peer) :
     QDialog(parent),
@@ -18,6 +19,18 @@ Profile::Profile(QWidget *parent, Peer *peer) :
     // PUT USERNAME
     QString uname = QString::fromStdString(peer->username);
     ui->label->setText(uname);
+
+    //closes everything once logged out
+    connect(this, SIGNAL(destroyed()), this->parent(),
+            SLOT(close()));
+
+    peer->readfile();
+    //peer->read_my_images_file();
+    ui->lbl_upload_successful->setVisible(false);
+    cout << "User's name: " << peer->username << endl;
+    std::thread listenThread(&Peer::listenPeer, peer);
+    cout << "User thread is listening..." << endl;
+    listenThread.detach();
 }
 
 Profile::~Profile()
@@ -64,34 +77,59 @@ void Profile::on_upload_images_clicked()
       ui->lbl_upload_successful->setVisible(true);
       ui->lbl_upload_successful->setText(QString("Uploaded Successfully!"));
       ui->lbl_upload_successful->setStyleSheet("QLabel { color : green; }");
-    } else if (upload_stat == 0) {
+    }
+    else if (upload_stat == 0) {
       ui->lbl_upload_successful->setVisible(true);
-      ui->lbl_upload_successful->setText(QString("Username not found!"));
-      ui->lbl_upload_successful->setStyleSheet("QLabel { color : red; }");
-    } else if (upload_stat == 6) {
-      ui->lbl_upload_successful->setVisible(true);
-      ui->lbl_upload_successful->setText(QString("Please, choose a file!"));
-      ui->lbl_upload_successful->setStyleSheet("QLabel { color : red; }");
-    } else if (upload_stat == 3) {
-      ui->lbl_upload_successful->setVisible(true);
-      ui->lbl_upload_successful->setText(
-          QString("No special Chars allowed in image name! Only 1 dot."));
-      ui->lbl_upload_successful->setStyleSheet("QLabel { color : red; }");
-    } else if (upload_stat == 9) {
-      ui->lbl_upload_successful->setVisible(true);
-      ui->lbl_upload_successful->setText(QString("Image uploaded before!"));
-      ui->lbl_upload_successful->setStyleSheet("QLabel { color : red; }");
-    } else if (upload_stat == 2) {
-      ui->lbl_upload_successful->setVisible(true);
-      ui->lbl_upload_successful->setText(QString("DoS Offline!"));
-      ui->lbl_upload_successful->setStyleSheet("QLabel { color : red; }");
-    } else if (upload_stat == 30) {
-      ui->lbl_upload_successful->setVisible(true);
-      ui->lbl_upload_successful->setText(QString("Check your internet connection!")); // Send to failed!
-      ui->lbl_upload_successful->setStyleSheet("QLabel { color : red; }");
-    } else {
-      ui->lbl_upload_successful->setVisible(true);
-      ui->lbl_upload_successful->setText(QString("Check your internet connection!"));
+      ui->lbl_upload_successful->setText(QString("Username not registered!"));
       ui->lbl_upload_successful->setStyleSheet("QLabel { color : red; }");
     }
+    else if (upload_stat == 6) {
+      ui->lbl_upload_successful->setVisible(true);
+      ui->lbl_upload_successful->setText(QString("Choose a file!"));
+      ui->lbl_upload_successful->setStyleSheet("QLabel { color : red; }");
+    }
+    else if (upload_stat == 3) {
+      ui->lbl_upload_successful->setVisible(true);
+      ui->lbl_upload_successful->setText(QString("No special Chars allowed "
+                                                 "in image name! Only 1 dot."));
+      ui->lbl_upload_successful->setStyleSheet("QLabel { color : red; }");
+    }
+    else if (upload_stat == 9) {
+      ui->lbl_upload_successful->setVisible(true);
+      ui->lbl_upload_successful->setText(QString("Image already on ImageSharer!"));
+      ui->lbl_upload_successful->setStyleSheet("QLabel { color : red; }");
+    }
+    else if (upload_stat == 2) {
+      ui->lbl_upload_successful->setVisible(true);
+      ui->lbl_upload_successful->setText(QString("Timeout error with DoS!"));
+      ui->lbl_upload_successful->setStyleSheet("QLabel { color : red; }");
+    }
+
+    //30 included
+    else {
+      ui->lbl_upload_successful->setVisible(true);
+      ui->lbl_upload_successful->setText(QString("Connection Error:"
+                                                 "DoS or User OFFLINE!"));
+      ui->lbl_upload_successful->setStyleSheet("QLabel { color : red; }");
+    }
+}
+
+void Profile::on_push_logout_clicked() {
+  int logged = peer->logout();
+  if (logged == 1) {
+      QMessageBox::critical(this, "Login Failed",
+                            "Timeout Error with DoS!");
+    usleep(2000);
+    peer->updatefile();
+    peer->update_my_images_file();
+    this->close();
+  }
+
+  else if (logged == 2)
+      QMessageBox::critical(this, "Logout Failed",
+                            "Timeout Error with DoS!");
+  else
+      QMessageBox::critical(this, "Logout Failed",
+                            "Connection Error: DoS or User OFFLINE!");
+
 }
