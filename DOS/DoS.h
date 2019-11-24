@@ -214,11 +214,11 @@ public:
 		case 1100: 
 		{
 			string lister = view();
-			sprintf((char*)(sendBuffer), "%s", lister.c_str());
 			cout << "Viewing all users: " << lister << endl;
 
 			//View Reply
 			memset(sendBuffer, 0, sizeof(sendBuffer));
+			sprintf((char*)(sendBuffer), "%s", lister.c_str());
 			if (sendto(sv->s, sendBuffer, strlen((const char*)sendBuffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("View Users failed to send");

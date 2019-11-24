@@ -1309,13 +1309,13 @@ public:
 
     QProcess::execute(QString::fromStdString("steghide embed -cf " +
                                              selectedImage + " -ef " +
-                                             viewsFilename + " -sf" +
+                                             viewsFilename + " -sf " +
                                              steg_image_name +
                                              " -p hk "));
 
-    QProcess::execute(QString::fromStdString("steghide embed -cf " +
-                                             steg_image_name + " -ef " +
-                                             selectedImage + " -p hk "));
+    //QProcess::execute(QString::fromStdString("steghide embed -cf " +
+                                             //steg_image_name + " -ef " +
+                                             //selectedImage + " -p hk "));
 
     ifstream is(steg_image_name, ifstream::binary);
 
