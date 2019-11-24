@@ -10,24 +10,19 @@ ViewImage::ViewImage(QWidget *parent, Peer *peer, string cover,
       QString::fromStdString("Last Time Refreshed: " + peer->getCurrentTime()));
   ui->lbl_time->setStyleSheet("QLabel { color : white; }");
   ui->lbl_result->setVisible(false);
+
   connect(this, SIGNAL(destroyed()), this->parent(),
-          SLOT(on_push_refresh_clicked())); // to close all after logout
+          SLOT(on_push_refresh_clicked()));
 
   string extract_command;
 
   extract_command =
-      "steghide extract -sf " + cover + " -p hk"; // + " -xf " + newViewsName
+      "steghide extract -sf " + cover + " -p hk";
 
   QProcess::execute(QString::fromStdString(extract_command));
   QPixmap pm(QString::fromStdString(img));
   ui->lbl_image->setPixmap(
       pm.scaled(400, 400, Qt::IgnoreAspectRatio, Qt::FastTransformation));
-
-  // deleting the extracted image from the receiver's folder after
-  // extracting the number of views
-  string deletecommand = "rm " + img;
-
-  QProcess::execute(QString::fromStdString(deletecommand));
 }
 
 ViewImage::~ViewImage() { delete ui; }

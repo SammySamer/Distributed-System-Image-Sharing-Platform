@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>490</width>
-    <height>452</height>
+    <width>594</width>
+    <height>624</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,8 +29,8 @@
   <widget class="QPushButton" name="push_back">
    <property name="geometry">
     <rect>
-     <x>390</x>
-     <y>10</y>
+     <x>460</x>
+     <y>20</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -55,10 +55,10 @@
   <widget class="QLabel" name="lbl_image">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>170</x>
      <y>70</y>
-     <width>67</width>
-     <height>17</height>
+     <width>221</width>
+     <height>101</height>
     </rect>
    </property>
    <property name="text">
@@ -69,7 +69,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>120</y>
+     <y>200</y>
      <width>471</width>
      <height>17</height>
     </rect>
@@ -81,10 +81,10 @@
   <widget class="QListWidget" name="listWidget">
    <property name="geometry">
     <rect>
-     <x>5</x>
-     <y>141</y>
-     <width>481</width>
-     <height>231</height>
+     <x>10</x>
+     <y>240</y>
+     <width>561</width>
+     <height>271</height>
     </rect>
    </property>
   </widget>
@@ -92,7 +92,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>380</y>
+     <y>540</y>
      <width>101</width>
      <height>25</height>
     </rect>
@@ -104,8 +104,8 @@
   <widget class="QLineEdit" name="line_views">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>380</y>
+     <x>460</x>
+     <y>570</y>
      <width>113</width>
      <height>25</height>
     </rect>
@@ -114,8 +114,8 @@
   <widget class="QLabel" name="lbl_result">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>410</y>
+     <x>170</x>
+     <y>550</y>
      <width>67</width>
      <height>17</height>
     </rect>
@@ -128,7 +128,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>430</y>
+     <y>580</y>
      <width>471</width>
      <height>17</height>
     </rect>

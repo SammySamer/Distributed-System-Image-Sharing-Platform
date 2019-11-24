@@ -13,12 +13,7 @@ SharedImages::SharedImages(QWidget *parent, Peer *peer)
   //ui->lbl_time->setStyleSheet("QLabel { color : white; }");
   ui->lbl_result->setVisible(false);
   string imagename, ownername, fullname;
-  //qDebug("%i", peer->sharedimgs.size());
-  //printf("%i", peer->sharedimgs.size());
-  //if (peer->sharedimgs.size() != 0)
-  //{
-      //printf("%i", peer->sharedimgs.size());
-      //qDebug("%i", peer->sharedimgs.size());
+
       for (auto const &x : peer->sharedimgs) {
         fullname = x.first;
         for (int j = fullname.length() - 1; j > 0; j--) {
@@ -32,7 +27,6 @@ SharedImages::SharedImages(QWidget *parent, Peer *peer)
             QString::fromStdString("Owner: " + ownername + ". Img: " + imagename +
                                    ". Views Left: " + std::to_string(x.second)));
     }
-  //}
 
   ui->line_views->setValidator(new QIntValidator); // only numbers
 }
@@ -75,11 +69,12 @@ void SharedImages::on_push_view_clicked() {
       int resultUsers = peer->notify_views_by_viewer(ownername, imagename,
                                    peer->sharedimgs[cover]);
       if(resultUsers == 1){
-          ViewImage secd(this, peer, cover, img);
-      secd.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
+        string realImage = ownername + "_" + imagename;
+        ViewImage secd(this, peer, cover, realImage);
+        secd.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
                           Qt::CustomizeWindowHint);
-      secd.setModal(true);
-      secd.exec();
+        secd.setModal(true);
+        secd.exec();
       }
       else if(resultUsers == 12){
         ui->lbl_result->setVisible(true);

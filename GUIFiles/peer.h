@@ -53,7 +53,7 @@ public:
   fstream Myimgsfile;
   UDPSocketClient *sv;
   char *dos_ip = "127.0.0.1";
-  //char *dos_ip = "10.40.37.126";
+  //char *dos_ip = "10.7.57.6";
   int dos_port = 8080;
   UDPSocketClient *sc;
   struct sockaddr_in dosSocket;

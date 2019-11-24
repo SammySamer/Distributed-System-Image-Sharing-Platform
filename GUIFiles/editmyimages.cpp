@@ -17,7 +17,7 @@ EditMyImages::EditMyImages(QWidget *parent, Peer *peer, QString imagename) :
     ui->line_views->setValidator(new QIntValidator); // only numbers
     QPixmap pm(imagename);
     ui->lbl_image->setPixmap(
-        pm.scaled(200, 200, Qt::IgnoreAspectRatio, Qt::FastTransformation));
+        pm.scaled(250, 250, Qt::IgnoreAspectRatio, Qt::FastTransformation));
     ui->lbl_time->setText(
         QString::fromStdString("Last Time Refreshed: " + peer->getCurrentTime()));
     //ui->lbl_time->setStyleSheet("QLabel { color : white; }");
