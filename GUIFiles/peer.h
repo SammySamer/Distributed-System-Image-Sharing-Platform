@@ -1,35 +1,37 @@
 #include "message.h"
 #include "udpsocketclient.h"
-#include <QProcess>
 #include <arpa/inet.h>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include <fstream>
-#include <iostream>
-#include <locale>
-#include <map>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <poll.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <thread>
 #include <unistd.h>
+
+#include <fstream>
+#include <iostream>
+#include <locale>
+#include <map>
+#include <string>
+#include <thread>
 #include <vector>
+
+#include <QProcess>
+
 using namespace std;
-//#include <limits.h> // for getcwd
-#define BUFFER_SIZE 50000
 
 #ifndef PEER_H
 #define PEER_H
-#define LITTLE_BUFFER_SIZE 50000
-#define PATH_MAX 500
+
+#define BUFFER_SIZE 50000
+#define LITTLE_BUFFER 20000
 
 #include <QDebug>
 #include <limits.h>
@@ -45,11 +47,10 @@ struct three_element_group
     int views;
 };
 
-// Peer
 class Peer
 {
-    // peer address
     private:
+      // peer address
       char sender_ip[INET_ADDRSTRLEN];
       uint16_t sender_port;
 
@@ -68,7 +69,7 @@ class Peer
       UDPSocketClient *sv;
 
       // receiver peer IP
-      std::string ip = "10.65.101.32";
+      string ip = "10.65.101.32";
 
       // DOS address (loopback)
       char *dos_ip = "127.0.0.1";
@@ -110,7 +111,7 @@ class Peer
       unsigned char Serverbuffer[BUFFER_SIZE];
 
       // buffer for flags of incoming requests
-      unsigned char Serverlittle_buffer[LITTLE_BUFFER_SIZE];
+      unsigned char Serverlittle_buffer[BUFFER_SIZE];
 
       // map of each user to its images
       map<string, vector<string>> users;
@@ -121,7 +122,7 @@ class Peer
       // constructor
       Peer()
       {
-        this->sv = new UDPSocketClient(); // UDPSocketServer(0); // dos_port
+        this->sv = new UDPSocketClient();
         this->sc = new UDPSocketClient();
       }
 
@@ -177,7 +178,8 @@ class Peer
     switch (op_id_request)
     {
 
-    case 2002: // view request
+    //viewing
+    case 2002:
     {
       cout << "2002 request received" << endl;
 
@@ -254,18 +256,18 @@ class Peer
         perror("View Request reply sendto failed");
       }
 
-      // End of changes
+    } break;
 
-    } break; // end of view
 
-    case 2004: // receive Image
+    //Receiving an image
+    case 2004: 
     {
       // image length
       unsigned long current_received = 0;
 
       // get request message fields
       int fragd = requestMsg.getDidFrag();
-      int MF = requestMsg.getMoreFrag();
+      int fragm = requestMsg.getMoreFrag();
       int fragc = requestMsg.getFragCount();
       int fraglength = requestMsg.getMessageSize();
       string image_owner = requestMsg.getImageOwner();
@@ -274,17 +276,14 @@ class Peer
       // get new filename
       string newFileName = image_owner + "_" + image_name;
 
-      cout << "Received Successfully!" << endl;
-      cout << "Received Message Length = \n"
-           << strlen((const char *)Serverbuffer);
+      cout << "Received Message Length = " << strlen((const char *)Serverbuffer);
       cout << "imfirstfrag length " << fraglength << endl;
-      // this->sendReply(reinterpret_cast<char*>(this->Serverbuffer));
 
       // update received fragment count
       current_received += r;
 
       // store fragments in little buffer
-      unsigned char little_buffer[20000];
+      unsigned char little_buffer[LITTLE_BUFFER];
 
       memset(little_buffer, 0, sizeof(little_buffer));
       sprintf((char *)(little_buffer), "%lu", current_received);
@@ -296,7 +295,7 @@ class Peer
 
 
       Message image_reply(Reply, msg_char, strlen(msg_char), op_id_request,
-                          rpcid_request, fragd, fragc, MF);
+                          rpcid_request, fragd, fragc, fragm);
 
       // marshal reply
       string x_reply = image_reply.marshal();
@@ -330,13 +329,13 @@ class Peer
         memset(little_buffer, 0, sizeof(little_buffer));
 
         // start receiving image
-        while (MF)
+        while (fragm)
         {
           cout << "Loop Start:" << endl;
           memset(little_buffer, 0, sizeof(little_buffer));
 
           // get a fragment in little buffer
-          r = recvfrom(sv->s, little_buffer, LITTLE_BUFFER_SIZE, 0,
+          r = recvfrom(sv->s, little_buffer, BUFFER_SIZE, 0,
                        (struct sockaddr *)&tempSocketAddress, &tempAddrlen);
 
           // get fields in fragment
@@ -359,7 +358,7 @@ class Peer
           // create reply
           char *msg_char = reinterpret_cast<char *>(little_buffer);
           Message image_reply(Reply, msg_char, strlen(msg_char), op_id_new,
-                              rpcid_new, fragd, fragc_new, MF);
+                              rpcid_new, fragd, fragc_new, fragm);
 
           // marshall reply
           string x_reply = image_reply.marshal();
@@ -373,7 +372,7 @@ class Peer
           if (rpcid_request == rpcid_new && (++fragc) == fragc_new)
           {
 
-            MF = imageFrag.getMoreFrag();
+            fragm = imageFrag.getMoreFrag();
 
             // write fragment to new file
             if (r > 0)
@@ -469,19 +468,20 @@ class Peer
         views_is.close();
 
         // delete extracted views file
-        string deletecommand2 = "rm " + newViewsName;
-        QProcess::execute(QString::fromStdString(deletecommand2));
+        string deletecmd = "rm " + newViewsName;
+        QProcess::execute(QString::fromStdString(deletecmd));
       }
 
       else
       {
-        cout << "could not open views file! " << endl;
+        cout << "Could not delete views.txt..." << endl;
       }
-    } break; //end of recieve
+    } break;
 
-    case 2005: // notify request
+    //Notification
+    case 2005: 
     {
-      cout << "2005 request received" << endl;
+      cout << "Notification (Request 2005) received!" << endl;
       int cc = 0;
       string username = "", imageName = "", NewNoViews = "";
 
@@ -551,26 +551,28 @@ class Peer
 
     } break; // end of notify
 
+
+    //Viewing 
     case 2006: // view request
     {
-      cout << "2006 request recieved" << endl;
-      int cc = 0;
+      cout << "View (Request 2006) recieved!" << endl;
+      int place = 0;
       string username = "", imageName = "", NewNoViews = "";
     
       // get message fields
-      while (msg[cc] != '*') {
-        username.append(1, msg[cc]);
-        cc++;
+      while (msg[place] != '*') {
+        username.append(1, msg[place]);
+        place++;
       }
-      cc++;
-      while (msg[cc] != '*') {
-        imageName.append(1, msg[cc]);
-        cc++;
+      place++;
+      while (msg[place] != '*') {
+        imageName.append(1, msg[place]);
+        place++;
       }
-      cc++;
-      while (msg[cc] != '*') {
-        NewNoViews.append(1, msg[cc]);
-        cc++;
+      place++;
+      while (msg[place] != '*') {
+        NewNoViews.append(1, msg[place]);
+        place++;
       }
       cout << "User: " << username << endl;
       cout << "Requested Image Name: " << imageName << endl;
@@ -610,9 +612,10 @@ class Peer
         perror("View Request reply sendto failed");
       }
 
-    } break; // end of view
+    } break;
 
-    case 2007: // view request
+    //View
+    case 2007: 
     {
       cout << "2007 request recieved" << endl;
       int cc = 0;
@@ -705,22 +708,27 @@ class Peer
     }
   }
 
-  // End of Server Functions
+  /* ----------------- End of Server Functions ------------------- */
+
+
+
+
+
 
   //creating a socket
   static void makeDestSA(struct sockaddr_in *sa, char *hostname, int port) {
     struct hostent *host;
     sa->sin_family = AF_INET;
     if ((host = gethostbyname(hostname)) == NULL) {
-        qDebug("Un kown Host");
+      qDebug("Unknown Host");
 
-       printf("Unknown host name\n");
+      printf("Unknown host name\n");
       exit(-1);
     }
 
-    qDebug("UWORKED");
+    qDebug("HOST WORKED");
+    printf("Known Host\n");
 
-   printf("known host name\n");
     sa->sin_addr = *(struct in_addr *)(host->h_addr);
     sa->sin_port = htons(port);
   }
@@ -739,8 +747,9 @@ class Peer
     for (int i = 0; i < password.length() && nospecial; i++) {
       nospecial = isalnum(password[i]);
     }
-    if (!nospecial) { // special chars
-      return 3;       // error code for special chars as they are delimiters
+    //special characters are delimiters so we had to exclude
+    if (!nospecial) { 
+      return 3;       
     }
     else
     {
@@ -768,7 +777,7 @@ class Peer
 
       int r = 1;
 
-      // Timeout Tolerance
+      // Handling Timeouts... 
       int npoll = 0, no_tries = 0;
       struct pollfd ss;
       ss.fd = sc->s;
@@ -780,15 +789,16 @@ class Peer
                           (struct sockaddr *)&dosSocketAddress,
                           sizeof(struct sockaddr_in))) < 0)
           {
-              return 6; // send failed
+              return 6; 
           }
           npoll = poll(&ss, 1, timeout_time_ms);
           no_tries++;
       }
-        if (npoll == 0 || npoll == -1) { // timeout
+        if (npoll == 0 || npoll == -1) { 
           return 2;
         }
-        else //no timeout happened
+
+        else 
         {
             unsigned char little_buffer[10];
             memset(little_buffer, 0, sizeof(little_buffer));
@@ -806,7 +816,7 @@ class Peer
                 return 8;
         }
     }
-  } //end of sign up
+  } 
 
   //login request
   int login(string username, string password) {
@@ -844,7 +854,7 @@ class Peer
 
       int r = 1;
 
-      // Timeout Tolerance
+      // Handling Timeouts
       int npoll = 0, no_tries = 0;
       struct pollfd ss;
       ss.fd = sv->s;
@@ -885,11 +895,11 @@ class Peer
                  return 8;
          }
     }
-  } //end of login
+  }
 
   int logout() {
 
-    //preparing logout request message
+    //prepping logout message to request
     string msg = this->username;
     char *msg_char = new char[msg.length() + 1];
     strcpy(msg_char, msg.c_str());
@@ -906,7 +916,7 @@ class Peer
 
     int r = 1;
 
-    // Timeout Tolerance
+    // Handling Timeouts
     int npoll = 0, no_tries = 0;
     struct pollfd ss;
     ss.fd = sc->s;
@@ -918,7 +928,7 @@ class Peer
                         (struct sockaddr *)&(this->dosSocket),
                         sizeof(struct sockaddr_in))) < 0)
         {
-            return 6; // send failed
+            return 6; 
         }
         npoll = poll(&ss, 1, timeout_time_ms);
         no_tries++;
@@ -935,20 +945,20 @@ class Peer
            if ((r = recvfrom(sc->s, little_buffer, 10, 0,
                       (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) < 0)
                perror("Receive Failed");
-           // close bound sockets
+
            close(sc->s);
            close(sv->s);
+
            if (little_buffer[0] == '1')
                return 1;
            else
                return 0;
         }
-  } //end of logout
+  } 
     
-  //getting path of exe
-  std::string getexepath() {
-    char result[PATH_MAX];
-    ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+  string getexepath() {
+    char result[500];
+    ssize_t count = readlink("/proc/self/exe", result, 500);
     return std::string(result, (count > 0) ? count : 0);
   }
 
@@ -1000,7 +1010,7 @@ class Peer
 
       int r = 1;
 
-      // Timeout Tolerance
+      // Handling Timeouts
       int npoll = 0, no_tries = 0;
       struct pollfd ss;
       ss.fd = sc->s;
@@ -1063,7 +1073,7 @@ class Peer
                 return 8;
             }
       }
-  } //end of uploading
+  }
 
   int notify_views_by_viewer(string owner, string selectedImage, int NewNoViews)
     {
@@ -1419,7 +1429,7 @@ class Peer
   void send_image(string viewerName, string selectedImage, int nViews) {
     UDPSocketClient *newSock = new UDPSocketClient();
     vector<string> images;
-    const int imageFrag_size = 20000;
+    const int imageFrag_size = LITTLE_BUFFER;
 
     images = this->users[viewerName]; // Saving the vector of the selected
                                       // user image names & socket addresses
@@ -1504,7 +1514,7 @@ class Peer
 
       requestID++;
       int fragc = 0;
-      int MF = 1;
+      int fragm = 1;
       int fragd = 0;
       if (length > imageFrag_size)
         fragd = 1;
@@ -1522,14 +1532,9 @@ class Peer
         printf("%s\n", "Loop Start:");
         if (current_length_before_marshalling + imageFrag_size < length) {
 
-          // memcpy (char_array, message+(current_length), imageFrag_size);
-
-          // char_array[imageFrag_size] = '\0';
-          // cout<<"char_array "<<char_array<<endl;
-
           Message imageFrag(
               Request, (newbuffer + current_length_before_marshalling),
-              imageFrag_size, 2004, requestID, fragd, ++fragc, MF);
+              imageFrag_size, 2004, requestID, fragd, ++fragc, fragm);
           imageFrag.setImageOwner(this->username);
           imageFrag.setImageName(selectedImage);
 
@@ -1580,12 +1585,14 @@ class Peer
 
           printf("Current Received Total %d.\n", current_length);
 
-        } else {
+        } 
+        
+        else {
 
-          MF = 0;
+          fragm = 0;
           Message imageLastFrag(Request,
                                 (newbuffer + current_length_before_marshalling),
-                                fakka, 2004, requestID, fragd, ++fragc, MF);
+                                fakka, 2004, requestID, fragd, ++fragc, fragm);
           x = imageLastFrag.marshal();
           int n = x.length();
 
@@ -1649,7 +1656,7 @@ class Peer
 
     int r = 1;
 
-    // Timeout Tolerance
+    // Handling Timeouts
     int npoll = 0, no_tries = 0;
     struct pollfd ss;
     ss.fd = sc->s;
@@ -1672,11 +1679,11 @@ class Peer
        } else {
 
     cout << "getusers sent" << endl;
-    unsigned char little_buffer[LITTLE_BUFFER_SIZE];
+    unsigned char little_buffer[BUFFER_SIZE];
     memset(little_buffer, 0, sizeof(little_buffer));
     struct sockaddr_in tempSocketAddress;
     socklen_t tempAddrlen = sizeof(tempSocketAddress);
-    if ((r = recvfrom(sc->s, little_buffer, LITTLE_BUFFER_SIZE, 0,
+    if ((r = recvfrom(sc->s, little_buffer, BUFFER_SIZE, 0,
                       (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) < 0)
       perror("Receive Failed");
     cout << "getusers received" << endl;
