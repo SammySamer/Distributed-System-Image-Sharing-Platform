@@ -73,7 +73,7 @@ public:
 	void getRequest() {
 
 		unsigned char* buffer = new unsigned char[MAIN_BUFFER];
-		unsigned char* little_buffer = new unsigned char[LITTLE_BUFFER];
+		unsigned char* sendBuffer = new unsigned char[LITTLE_BUFFER];
 
 		printf("Getting requests: \n");
 		memset(buffer, 0, sizeof(buffer));
@@ -85,20 +85,19 @@ public:
 		printf("Received Message = %s.\n", buffer);
 
 		inet_ntop(AF_INET, &(recievedAddr.sin_addr), sender_ip, INET_ADDRSTRLEN);
-
 		sender_port = htons((&recievedAddr)->sin_port);
-
-		printf("Sender IP:%s & port: %d\n", sender_ip, sender_port);
+		printf("Sender IP:%s. Sender's port: %i\n", sender_ip, sender_port);
 
 		Message requestMsg(reinterpret_cast<char*>(buffer));
-		int OP_ID = requestMsg.getOperation();
-		string msg = requestMsg.getUnmarshalledMessage();
+		int OPCODE = requestMsg.getOperation();
 		int RPC_ID = requestMsg.getRPCId();
+		string msg = requestMsg.getUnmarshalledMessage();
 
-		cout << "Operation ID: " << OP_ID << endl;
+		cout << "Operation Code: " << OPCODE << endl;
 		cout << "RPC ID: " << RPC_ID << endl;
 		cout << "Received Msg: " << msg << endl;
-		switch (OP_ID) {
+		
+		switch (OPCODE) {
 
 		//Sign Up
 		case 1001:
@@ -109,31 +108,34 @@ public:
 				username.append(1, msg[place]);
 				place++;
 			}
+
 			place++;
 			while (msg[place] != 0) {
 				password.append(1, msg[place]);
 				place++;
 			}
+
 			cout << "User: " << username << endl;
 			cout << "Pass: " << password << endl;
 			bool didsign = signUp(username, password);
-			cout << "Signed up?" << didsign << endl;
-			// Sign Up reply
-			memset(little_buffer, 0, sizeof(little_buffer));
-			if (didsign)
-				little_buffer[0] = '1';
-			else
-				little_buffer[0] = '0';
 
-			// sprintf((char *)(little_buffer), "%d", didsign);
-			little_buffer[1] = 0;
-			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
+			//Reply back
+			memset(sendBuffer, 0, sizeof(sendBuffer));
+			if (didsign)
+				sendBuffer[0] = '1';
+			else
+				sendBuffer[0] = '0';
+
+			sendBuffer[1] = 0;
+
+			if (sendto(sv->s, sendBuffer, strlen((const char*)sendBuffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("Sign up reply sendto failed");
 			}
 
 		}
 		break;
+
 
 		//Login
 		case 1002:
@@ -145,37 +147,39 @@ public:
 				place++;
 			}
 			place++;
+
 			while (msg[place] != 0) {
 				password.append(1, msg[place]);
 				place++;
 			}
+
 			cout << "User: " << username << endl;
 			cout << "Pass: " << password << endl;
-			int didlogin = login(username, password);
+			int didLogin = login(username, password);
 
-			cout << "Logged in status: " << didlogin << endl;
-
-			// Sign Up reply
-			memset(little_buffer, 0, sizeof(little_buffer));
-			if (didlogin == 1)
-				little_buffer[0] = '1';
-			else if (didlogin == 0)
-				little_buffer[0] = '0';
-			else if (didlogin == 5)
-				little_buffer[0] = '5';
+			//Login reply
+			memset(sendBuffer, 0, sizeof(sendBuffer));
+			if (didLogin == 1)
+				sendBuffer[0] = '1';
+			else if (didLogin == 0)
+				sendBuffer[0] = '0';
+			else if (didLogin == 5)
+				sendBuffer[0] = '5';
 			else
-				little_buffer[0] = '4';
-			little_buffer[1] = 0;
-			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
+				sendBuffer[0] = '4';
+			//sendBuffer[0] = didLogin;	
+			sendBuffer[1] = 0;
+			cout << "Login status: " << sendBuffer[0] << endl;
+			if (sendto(sv->s, sendBuffer, strlen((const char*)sendBuffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
-				perror("Sign up reply sendto failed");
+				perror("Logging In reply failed");
 			}
 		}
+		break; 
 
-		break; // end of login
 
-
-		case 1003: // logout
+		//Logout
+		case 1003:
 		{
 			int place = 0;
 			string username = "";
@@ -185,49 +189,50 @@ public:
 			}
 
 			cout << "User: " << username << endl;
+			bool didLogout = logout(username);
 
-			bool wasin = logout(username);
+			//Logout reply
+			memset(sendBuffer, 0, sizeof(sendBuffer));
 
-			cout << "Logged out? " << wasin << endl;
-
-			// Sign Up reply
-			memset(little_buffer, 0, sizeof(little_buffer));
-			if (wasin == true)
-				little_buffer[0] = '1';
+			if (didLogout == true)
+				sendBuffer[0] = '1';
 			else
-				little_buffer[0] = '0';
-			little_buffer[1] = 0;
-			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
+				sendBuffer[0] = '0';
+
+			sendBuffer[1] = 0;
+
+			if (sendto(sv->s, sendBuffer, strlen((const char*)sendBuffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
-				perror("Sign up reply sendto failed");
+				perror("Logging out reply failed");
 			}
 
 		}
-		break; // end of logout
+		break;
 
-		case 1100: // view
+
+		//View Users
+		case 1100: 
 		{
+			string lister = view();
 
-			string res = view();
+			cout << "Viewing all users. Text: " << lister << endl;
 
-			cout << "Viewing all. Text: " << res << endl;
-
-			// Sign Up reply
-			memset(little_buffer, 0, sizeof(little_buffer));
-
-			sprintf((char*)(little_buffer), "%s", res.c_str());
-
-			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
+			//View Reply
+			memset(sendBuffer, 0, sizeof(sendBuffer));
+			if (sendto(sv->s, sendBuffer, strlen((const char*)sendBuffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
-				perror("Sign up reply sendto failed");
+				perror("View Users failed to send");
 			}
+		} 
+		break;
 
-		} break; // end of view
 
-		case 2001: // upload
+		//Upload
+		case 2001:
 		{
 			int place = 0;
 			string username = "", imagename = "";
+
 			while (msg[place] != '*') {
 				username.append(1, msg[place]);
 				place++;
@@ -237,35 +242,37 @@ public:
 				imagename.append(1, msg[place]);
 				place++;
 			}
+
 			cout << "User: " << username << endl;
-			cout << "Imagename: " << imagename << endl;
+			cout << "Image Name: " << imagename << endl;
 			int uploaded = upload(username, imagename);
 
-			cout << "Uploaded? " << uploaded << endl;
-			// Sign Up reply
-			memset(little_buffer, 0, sizeof(little_buffer));
+			//Upload reply
+			memset(sendBuffer, 0, sizeof(sendBuffer));
 			if (uploaded == 1)
-				little_buffer[0] = '1';
+				sendBuffer[0] = '1';
 			else if (uploaded == 0)
-				little_buffer[0] = '0';
+				sendBuffer[0] = '0';
 			else if (uploaded == 9)
-				little_buffer[0] = '9';
+				sendBuffer[0] = '9';
 			else
-				little_buffer[0] = '8'; // if something is wrong
-			little_buffer[1] = 0;
-			if (sendto(sv->s, little_buffer, strlen((const char*)little_buffer), 0,
+				sendBuffer[0] = '8';
+			sendBuffer[1] = 0;
+			if (sendto(sv->s, sendBuffer, strlen((const char*)sendBuffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
-				perror("Sign up reply sendto failed");
+				perror("Upload reply failed");
 			}
 
-		} break; // end of upload
+		} 
+		break;
 
 		default:
 			break;
 		}
 	}
 
-  bool serveRequests() { getRequest(); }
+
+bool serveRequests() { getRequest(); }
 
 
 //just sends a reply with the buffer
@@ -551,22 +558,12 @@ int upload1(string username, string imgName) {
 
 		//the image was found
 		else {
-			users.close();
-			users.open("users.txt", fstream::out | fstream::in);
-			users << updated;
-			users.close();
-			users.open("users.txt", fstream::out | fstream::in | fstream::app);
 			return 9;
 		}
 	}
 
 	//username wasn't found
 	else {
-      	users.close();
-      	users.open("users.txt", fstream::out | fstream::in);
-      	users << updated;
-      	users.close();
-      	users.open("users.txt", fstream::out | fstream::in | fstream::app);
 		return 0;
 	}
 
