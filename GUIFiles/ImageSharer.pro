@@ -34,7 +34,8 @@ SOURCES += \
     notifications.cpp \
     myimages.cpp \
     editmyimages.cpp \
-    allusers_images.cpp
+    allusers_images.cpp \
+    sharedimages.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -48,7 +49,8 @@ HEADERS += \
     notifications.h \
     myimages.h \
     editmyimages.h \
-    allusers_images.h
+    allusers_images.h \
+    sharedimages.h
 
 FORMS += \
         mainwindow.ui \
@@ -59,7 +61,8 @@ FORMS += \
     notifications.ui \
     myimages.ui \
     editmyimages.ui \
-    allusers_images.ui
+    allusers_images.ui \
+    sharedimages.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

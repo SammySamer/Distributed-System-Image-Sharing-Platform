@@ -2,8 +2,12 @@
 #define PROFILE_H
 
 #include <QDialog>
-#include "allusers.h"
+
 #include "peer.h"
+#include "sharedimages.h"
+#include "allusers.h"
+#include "myimages.h"
+#include "notifications.h"
 
 namespace Ui {
 class Profile;
@@ -19,6 +23,8 @@ public:
 
 private slots:
     void on_allusersButton_clicked();
+
+    void on_sharedImButton_clicked();
 
     void on_notifications_clicked();
 

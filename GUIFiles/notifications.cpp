@@ -3,6 +3,7 @@
 #include "profile.h"
 #include <string>
 #include <QMessageBox>
+#include <thread>
 
 Notifications::Notifications(QWidget *parent, Peer *peer) :
     QDialog(parent),
@@ -48,6 +49,7 @@ void Notifications::on_push_approve_clicked() {
         peer->requests_buffer[ui->listWidget->currentRow()].second.name;
     string imname =
         peer->requests_buffer[ui->listWidget->currentRow()].second.imagename;
+
     int opcode = peer->requests_buffer[ui->listWidget->currentRow()].first;
     if(ui->line_views->text() == "" && (opcode == 2002 || opcode == 2007)){
         ui->lbl_result->setVisible(true);

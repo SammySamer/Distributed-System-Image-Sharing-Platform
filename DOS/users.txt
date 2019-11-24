@@ -1,8 +1,8 @@
 Samer dog.jpg 
-Mariam 
-Maram stones.jpeg panda.jpg 
-Ruby 
-1 
+Mariam panda.jpg peace.jpeg 
+Maram stones.jpeg panda.jpg minions.jpeg dog.jpg 
+Ruby stones.jpeg images.jpeg 
+1 cat.jpeg 
 2 
 3 
 4 
@@ -11,6 +11,6 @@ Ruby
 7 
 8 
 9 
-0 
+0 dog.jpg 
 Testing123 
 Aya 

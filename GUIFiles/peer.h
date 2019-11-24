@@ -201,9 +201,6 @@ public:
       cout << "Received Message Length = \n"
            << strlen((const char *)Serverbuffer);
       cout << "imfirstfrag length " << fraglength << endl;
-      // this->sendReply(reinterpret_cast<char*>(this->Serverbuffer));
-
-      // Hassan Changes
 
       current_received += r;
       unsigned char little_buffer[20000];
@@ -1285,12 +1282,13 @@ public:
     strcpy(remote_peer_address, remote_peer_ip.c_str());
     makeDestSA(&receiverSocket, remote_peer_address, remote_peer_port);
 
-    cout << "Start of Send image" << endl;
+    cout << "Starting to send the image " << endl;
     string steg_image_name = this->username + "_" + selectedImage;
-    cout << "Image name " << selectedImage << " Steg name " << steg_image_name
+    cout << "Image name: " << selectedImage << ". New name: " << steg_image_name
          << endl;
 
     // Embedding the views txt file in the image
+
 
     string imagenodot;
     for (int j = selectedImage.length() - 1; j > 0; j--) {
@@ -1318,7 +1316,7 @@ public:
                                              steg_image_name + " -ef " +
                                              selectedImage + " -p hk "));
 
-    std::ifstream is(steg_image_name, std::ifstream::binary);
+    ifstream is(steg_image_name, ifstream::binary);
 
     if (is) {
 
@@ -1326,7 +1324,6 @@ public:
       is.seekg(0, is.end);
       unsigned int length = is.tellg();
       is.seekg(0, is.beg);
-      // cout << "Original Decoded Image Length: "<< length << endl;
 
       char *newbuffer = new char[length]; // allocate memory
 
@@ -1364,10 +1361,6 @@ public:
         printf("%s\n", "Loop Start:");
         if (current_length_before_marshalling + imageFrag_size < length) {
 
-          // memcpy (char_array, message+(current_length), imageFrag_size);
-
-          // char_array[imageFrag_size] = '\0';
-          // cout<<"char_array "<<char_array<<endl;
 
           Message imageFrag(
               Request, (newbuffer + current_length_before_marshalling),
@@ -1479,7 +1472,7 @@ public:
       printf("Current %d.\n", current_length);
 
     } else
-      cout << "could'nt open file" << endl;
+      cout << "couldn't open file" << endl;
   }
 
   int getUsers() {

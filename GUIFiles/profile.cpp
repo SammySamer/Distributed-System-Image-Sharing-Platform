@@ -1,8 +1,7 @@
 #include "profile.h"
 #include "ui_profile.h"
+
 #include <string>
-#include "notifications.h"
-#include "myimages.h"
 #include <qfiledialog.h>
 #include <thread>
 #include <unistd.h>
@@ -51,6 +50,16 @@ void Profile::on_allusersButton_clicked()
                          Qt::CustomizeWindowHint);
     users.setModal(true);
     users.exec();
+}
+
+void Profile::on_sharedImButton_clicked()
+{
+    // Shared Images Window goes here
+    SharedImages sharedIm;
+    sharedIm.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
+                         Qt::CustomizeWindowHint);
+    sharedIm.setModal(true);
+    sharedIm.exec();
 }
 
 void Profile::on_notifications_clicked()
