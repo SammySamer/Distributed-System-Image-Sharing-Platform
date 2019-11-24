@@ -1652,6 +1652,9 @@ public:
 
       string shared_images_filename = this->username + "_sharedimages.txt";
       imgfile.open(shared_images_filename, fstream::out | fstream::in | fstream::app);
+      imgfile.close();
+
+      imgfile.open(shared_images_filename, fstream::out | fstream::in | fstream::app);
       imgfile.seekp(0);
       while (!imgfile.eof()) {
         string line;
@@ -1675,6 +1678,9 @@ public:
     //to be loaded into our program's map
     void read_my_images_file() {
       string myimages_filename = this->username + "_images.txt";
+      Myimgsfile.open(myimages_filename, fstream::out | fstream::in | fstream::app);
+      Myimgsfile.close();
+
       Myimgsfile.open(myimages_filename, fstream::out | fstream::in | fstream::app);
       Myimgsfile.seekp(0);
       pair<string, int> p;
