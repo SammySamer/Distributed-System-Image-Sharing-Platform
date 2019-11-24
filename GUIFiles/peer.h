@@ -52,8 +52,8 @@ public:
   fstream imgfile;
   fstream Myimgsfile;
   UDPSocketClient *sv;
-  //char *dos_ip = "127.0.0.1";
-  char *dos_ip = "10.40.37.126";
+  char *dos_ip = "127.0.0.1";
+  //char *dos_ip = "10.40.37.126";
   int dos_port = 8080;
   UDPSocketClient *sc;
   struct sockaddr_in dosSocket;
@@ -1309,7 +1309,9 @@ public:
 
     QProcess::execute(QString::fromStdString("steghide embed -cf " +
                                              selectedImage + " -ef " +
-                                             viewsFilename + " -p hk "));
+                                             viewsFilename + " -sf" +
+                                             steg_image_name +
+                                             " -p hk "));
 
     QProcess::execute(QString::fromStdString("steghide embed -cf " +
                                              steg_image_name + " -ef " +

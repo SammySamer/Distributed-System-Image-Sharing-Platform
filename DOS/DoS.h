@@ -167,7 +167,7 @@ public:
 				sendBuffer[0] = '5';
 			else
 				sendBuffer[0] = '4';
-			//sendBuffer[0] = didLogin;	
+
 			sendBuffer[1] = 0;
 			cout << "Login status: " << sendBuffer[0] << endl;
 			if (sendto(sv->s, sendBuffer, strlen((const char*)sendBuffer), 0,
@@ -214,8 +214,8 @@ public:
 		case 1100: 
 		{
 			string lister = view();
-
-			cout << "Viewing all users. Text: " << lister << endl;
+			sprintf((char*)(sendBuffer), "%s", lister.c_str());
+			cout << "Viewing all users: " << lister << endl;
 
 			//View Reply
 			memset(sendBuffer, 0, sizeof(sendBuffer));

@@ -51,7 +51,7 @@ void Profile::on_allusersButton_clicked()
     users.setModal(true);
     users.exec();
 }
-
+/*
 void Profile::on_sharedImButton_clicked()
 {
     // Shared Images Window goes here
@@ -61,7 +61,7 @@ void Profile::on_sharedImButton_clicked()
     sharedIm.setModal(true);
     sharedIm.exec();
 }
-
+*/
 void Profile::on_notifications_clicked()
 {
     //VIEWING NOTIFICATIONS

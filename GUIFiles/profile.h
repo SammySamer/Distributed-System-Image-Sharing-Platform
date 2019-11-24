@@ -4,7 +4,7 @@
 #include <QDialog>
 
 #include "peer.h"
-#include "sharedimages.h"
+//#include "sharedimages.h"
 #include "allusers.h"
 #include "myimages.h"
 #include "notifications.h"
@@ -24,7 +24,7 @@ public:
 private slots:
     void on_allusersButton_clicked();
 
-    void on_sharedImButton_clicked();
+    //void on_sharedImButton_clicked();
 
     void on_notifications_clicked();
 
