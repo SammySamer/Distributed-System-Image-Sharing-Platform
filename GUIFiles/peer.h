@@ -1309,7 +1309,9 @@ class Peer
         0) {
       cout << "Receive Failed! " << endl;
       return 3;
-    } else {
+    } 
+    
+    else {
       // unmarshal the reply
       Message reply_update_request(reinterpret_cast<char *>(little_buffer));
 
