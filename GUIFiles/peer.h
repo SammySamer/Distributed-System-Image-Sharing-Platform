@@ -36,56 +36,103 @@ using namespace std;
 #include <string>
 #include <unistd.h>
 #include <string>
-struct three_element_group{
+
+// image struct
+struct three_element_group
+{
     string name;
     string imagename;
     int views;
 };
 
-class Peer {
-private:
-  char sender_ip[INET_ADDRSTRLEN];
-  uint16_t sender_port;
+// Peer
+class Peer
+{
+    // peer address
+    private:
+      char sender_ip[INET_ADDRSTRLEN];
+      uint16_t sender_port;
 
-public:
-  map<string, int> sharedimgs;
-  fstream imgfile;
-  fstream Myimgsfile;
-  UDPSocketClient *sv;
-  char *dos_ip = "127.0.0.1";
-  //char *dos_ip = "10.7.57.6";
-  int dos_port = 8080;
-  UDPSocketClient *sc;
-  struct sockaddr_in dosSocket;
-  int requestID = 0;
-  pair<string, int> viewer;
-  map<string, vector<pair<string, int>>> myimages;
-  const int timeout_loop = 10, timeout_time_ms = 100;
-  int n;
+    // service parameters
+    public:
+      // shared images vector (image name + number of views allowed for this peer)
+      map <string, int> sharedimgs;
 
-  string username, password;
-  unsigned char buffer[BUFFER_SIZE];
-  int r;
-  struct sockaddr_in recievedAddr;
-  socklen_t addresslength = sizeof(recievedAddr);
-  vector<pair<int, three_element_group>> requests_buffer;
+      // stream for an image
+      fstream imgfile;
 
-  unsigned char Serverbuffer[BUFFER_SIZE];
-  unsigned char Serverlittle_buffer[LITTLE_BUFFER_SIZE];
+      // stream for all owned images
+      fstream Myimgsfile;
 
-  map<string, vector<string>> users;
-  map<string, vector<string>>::iterator it;
+      // client for sending
+      UDPSocketClient *sv;
 
-  Peer() {
-    this->sv = new UDPSocketClient(); // UDPSocketServer(0); // dos_port
-    this->sc = new UDPSocketClient();
+      // receiver peer IP
+      std::string ip = "10.65.101.32";
 
-  }
-  ~Peer() {}
+      // DOS address (loopback)
+      char *dos_ip = "127.0.0.1";
+      //char *dos_ip = "10.7.57.6";
+      int dos_port = 8080;
 
-  void listenPeer() {
+      // client for receiving
+      UDPSocketClient *sc;
+
+      // socket for connecting to DOS
+      struct sockaddr_in dosSocket;
+
+      // request type
+      int requestID = 0;
+
+      // viewer/requesting peer
+      pair<string, int> viewer;
+
+      // owned images vector
+      map<string, vector<pair<string, int>>> myimages;
+
+      // timeout parameters
+      const int timeout_loop = 10, timeout_time_ms = 100;
+      int n;
+
+      // account parameters
+      string username, password;
+
+      // buffer for incoming images
+      unsigned char buffer[BUFFER_SIZE];
+      int r;
+      struct sockaddr_in recievedAddr;
+      socklen_t addresslength = sizeof(recievedAddr);
+
+      // buffer for parsed incoming requests
+      vector<pair<int, three_element_group>> requests_buffer;
+
+      // buffer for whole incoming requests
+      unsigned char Serverbuffer[BUFFER_SIZE];
+
+      // buffer for flags of incoming requests
+      unsigned char Serverlittle_buffer[LITTLE_BUFFER_SIZE];
+
+      // map of each user to its images
+      map<string, vector<string>> users;
+
+      // map of a single user to its images
+      map<string, vector<string>>::iterator it;
+
+      // constructor
+      Peer()
+      {
+        this->sv = new UDPSocketClient(); // UDPSocketServer(0); // dos_port
+        this->sc = new UDPSocketClient();
+      }
+
+      ~Peer() {}
+
+  // start listening for requests
+  void listenPeer()
+  {
     cout << "Thread created and is listening" << endl;
-    while (getRequest()) {
+    while (getRequest())
+    {
     }
   }
 
@@ -93,14 +140,17 @@ public:
 /* ------------------ SERVER FUNCTIONS ----------------------- */
 
 
-  bool getRequest() {
+  // single listen implementation
+  bool getRequest()
+  {
 
     cout << "Peer's getting requests: " << endl;
 
+    // initialize request receive buffer
     memset(Serverbuffer, 0, sizeof(Serverbuffer));
 
     // Receive Marshalled Message
-    struct sockaddr_in tempSocketAddress;
+    struct sockaddr_in tempSocketAddress;               // sender socket
     socklen_t tempAddrlen = sizeof(tempSocketAddress);
     if ((r = recvfrom(sv->s, Serverbuffer, BUFFER_SIZE, 0,
                       (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) <
@@ -108,21 +158,30 @@ public:
       cout << "Failed to receive marshalled message..." << endl;
     }
 
+    // find sender IP
     inet_ntop(AF_INET, &(tempSocketAddress.sin_addr), sender_ip,
               INET_ADDRSTRLEN);
 
+    // find sender port
     sender_port = htons((&tempSocketAddress)->sin_port);
 
+    // obtain request message
     Message requestMsg(reinterpret_cast<char *>(Serverbuffer));
+
+    // separate header (operation and RPCid) from message
     int op_id_request = requestMsg.getOperation();
     int rpcid_request = requestMsg.getRPCId();
     string msg = requestMsg.getUnmarshalledMessage();
 
-    switch (op_id_request) {
+    // handle request based on operation
+    switch (op_id_request)
+    {
 
     case 2002: // view request
     {
-      cout << "2002 request recieved" << endl;
+      cout << "2002 request received" << endl;
+
+      // get message fields
       int cc = 0;
       string username = "", imageName = "", views_str = "";
       while (msg[cc] != '*') {
@@ -143,35 +202,52 @@ public:
       cout << "User: " << username << endl;
       cout << "Requested Image Name: " << imageName << endl;
 
+      // initialize request receive sub-buffer
       memset(Serverlittle_buffer, 0, sizeof(Serverlittle_buffer));
-       three_element_group r;
-       r.name = username;
-       r.imagename = imageName;
-       r.views = stoi(views_str);
+
+      // pair this request's three fields with the operation --> operational pair
+      three_element_group r;
+      r.name = username;
+      r.imagename = imageName;
+      r.views = stoi(views_str);
       pair<int, three_element_group> pair_temp =
           make_pair(2002, r);
+
+      // find if this request's operational pair is not found
       bool pair_found = false;
-      for (int e = 0; e < requests_buffer.size() && !pair_found; e++) {
+      for (int e = 0; e < requests_buffer.size() && !pair_found; e++)
+      {
           pair_found = (requests_buffer[e].first == pair_temp.first && requests_buffer[e].second.name == pair_temp.second.name && requests_buffer[e].second.imagename == pair_temp.second.imagename && requests_buffer[e].second.views == pair_temp.second.views);
       }
-      if (!pair_found) {
+
+      // store pair in requests buffer if not found
+      if (!pair_found)
+      {
         requests_buffer.push_back(pair_temp);
         Serverlittle_buffer[0] = '1';
-      } else {
+      }
+
+      // indicate not processing in incoming request sub-buffer
+      else
+      {
         Serverlittle_buffer[0] = '0';
       }
 
       Serverlittle_buffer[1] = 0;
 
+      // get reply
       char *msg_char = reinterpret_cast<char *>(this->Serverlittle_buffer);
 
       Message view_request_reply(Reply, msg_char, strlen(msg_char),
                                  op_id_request, rpcid_request, 0, 0, 0);
+
+      // marshal reply
       string x_reply = view_request_reply.marshal();
       char marshalled_message_reply[BUFFER_SIZE];
       int n = x_reply.length();
       strncpy(marshalled_message_reply, x_reply.c_str(), n + 1);
 
+      // send marshalled reply to sender address (temp)
       if (sendto(sv->s, marshalled_message_reply,
                  strlen((const char *)marshalled_message_reply), 0,
                  (struct sockaddr *)&tempSocketAddress, tempAddrlen) < 0) {
@@ -187,6 +263,7 @@ public:
       // image length
       unsigned long current_received = 0;
 
+      // get request message fields
       int fragd = requestMsg.getDidFrag();
       int MF = requestMsg.getMoreFrag();
       int fragc = requestMsg.getFragCount();
@@ -194,27 +271,34 @@ public:
       string image_owner = requestMsg.getImageOwner();
       string image_name = requestMsg.getImageName();
 
+      // get new filename
       string newFileName = image_owner + "_" + image_name;
 
-      cout << "Received Successfully!! " << endl;
+      cout << "Received Successfully!" << endl;
       cout << "Received Message Length = \n"
            << strlen((const char *)Serverbuffer);
       cout << "imfirstfrag length " << fraglength << endl;
+      // this->sendReply(reinterpret_cast<char*>(this->Serverbuffer));
 
+      // update received fragment count
       current_received += r;
+
+      // store fragments in little buffer
       unsigned char little_buffer[20000];
 
       memset(little_buffer, 0, sizeof(little_buffer));
       sprintf((char *)(little_buffer), "%lu", current_received);
 
-      // Marshal the reply and then send it
+      // create reply
       char *msg_char = reinterpret_cast<char *>(little_buffer);
 
       cout << "little_buffer " << little_buffer << endl;
 
+
       Message image_reply(Reply, msg_char, strlen(msg_char), op_id_request,
                           rpcid_request, fragd, fragc, MF);
 
+      // marshal reply
       string x_reply = image_reply.marshal();
 
       char marshalled_message_reply[BUFFER_SIZE];
@@ -224,6 +308,7 @@ public:
 
       cout << "marshalled_message_reply " << marshalled_message_reply << endl;
 
+      // send reply to sender socket (temp)
       if (sendto(sv->s, marshalled_message_reply,
                  strlen(marshalled_message_reply), 0,
                  (struct sockaddr *)&tempSocketAddress, tempAddrlen) < 0) {
@@ -232,25 +317,29 @@ public:
 
       printf("%s.\n", "Start of image receive");
 
+      // write unmarshalled message to new file if request received
       std::ofstream os(newFileName);
 
-      if (r > 0) {
+      if (r > 0)
+      {
         os << msg;
       }
 
-      if (fragd) {
-
-        // memset(buffer, 0, sizeof(buffer));
+      if (fragd)
+      {
         memset(little_buffer, 0, sizeof(little_buffer));
 
-        // Start Receiving Image
-        while (MF) {
+        // start receiving image
+        while (MF)
+        {
           cout << "Loop Start:" << endl;
           memset(little_buffer, 0, sizeof(little_buffer));
 
+          // get a fragment in little buffer
           r = recvfrom(sv->s, little_buffer, LITTLE_BUFFER_SIZE, 0,
                        (struct sockaddr *)&tempSocketAddress, &tempAddrlen);
 
+          // get fields in fragment
           Message imageFrag(reinterpret_cast<char *>(little_buffer));
 
           string imfrag = imageFrag.getUnmarshalledMessage();
@@ -259,21 +348,20 @@ public:
           int op_id_new = imageFrag.getOperation();
           int fragc_new = imageFrag.getFragCount();
 
-          // string newY(imfrag,imfraglen);
-
+          // update received fragment count
           current_received += r;
           cout << "Received total " << current_received << " encoded bytes.\n";
 
-          // Marshal the reply and then send it
-
+          // set little buffer to fragment count
           memset(little_buffer, 0, sizeof(little_buffer));
           sprintf((char *)(little_buffer), "%lu", current_received);
 
+          // create reply
           char *msg_char = reinterpret_cast<char *>(little_buffer);
-
           Message image_reply(Reply, msg_char, strlen(msg_char), op_id_new,
                               rpcid_new, fragd, fragc_new, MF);
 
+          // marshall reply
           string x_reply = image_reply.marshal();
 
           char marshalled_message_reply[BUFFER_SIZE];
@@ -281,27 +369,35 @@ public:
           int n = x_reply.length();
           strncpy(marshalled_message_reply, x_reply.c_str(), n + 1);
 
-          if (rpcid_request == rpcid_new && (++fragc) == fragc_new) {
+          // if new fragment
+          if (rpcid_request == rpcid_new && (++fragc) == fragc_new)
+          {
 
             MF = imageFrag.getMoreFrag();
 
-            if (r > 0) {
+            // write fragment to new file
+            if (r > 0)
+            {
               os << imfrag;
             }
 
+            // send reply to sender
             if (sendto(sv->s, marshalled_message_reply,
                        strlen(marshalled_message_reply), 0,
                        (struct sockaddr *)&tempSocketAddress,
-                       tempAddrlen) < 0) {
+                       tempAddrlen) < 0)
+            {
               perror("send to reply failed");
             }
 
             // End of changes
 
-          } else if ((rpcid_request == rpcid_new) && (fragc == fragc_new)) {
-            // Re-send the reply without writing the image
-            // if the image fragment was sent before
+          }
 
+          // if fragment was received before
+          else if ((rpcid_request == rpcid_new) && (fragc == fragc_new))
+          {
+            // re-send the reply without writing the image
             if (sendto(sv->s, marshalled_message_reply,
                        strlen(marshalled_message_reply), 0,
                        (struct sockaddr *)&tempSocketAddress,
@@ -313,15 +409,17 @@ public:
       }
       os.close();
 
+      // get the embedded image
       cout << "newFileName: " << newFileName << endl;
 
       string extract_command;
 
       extract_command = "steghide extract -sf " + newFileName +
-                        " -p hk"; // get the embedded image
+                        " -p hk";
 
       QProcess::execute(QString::fromStdString(extract_command));
 
+      // get file with views of this image
       string imagenodot;
       for (int j = image_name.length() - 1; j > 0; j--) {
 
@@ -332,16 +430,16 @@ public:
       }
 
       string newViewsName =
-          this->username + "_" + imagenodot + "_" + "views.txt"; // views file name
+          this->username + "_" + imagenodot + "_" + "views.txt";
 
+      // extract views
       string views_extractcommand =
-          "steghide extract -sf " + image_name + " -p hk"; // extract views file
+          "steghide extract -sf " + image_name + " -p hk";
 
       QProcess::execute(QString::fromStdString(views_extractcommand));
 
-      // deleting the extracted image from the receiver's folder after
-      // extracting the number of views
-      string deletecommand = "rm " + image_name; // delete extracted image
+      // delete the extracted image after extracting the number of views
+      string deletecommand = "rm " + image_name;
       vector<string> images;
 
       QProcess::execute(QString::fromStdString(deletecommand));
@@ -350,98 +448,116 @@ public:
 
       ifstream views_is(newViewsName);
 
-      if (views_is) {
-
+      if (views_is)
+      {
+        // get views from file
         views_is >> views;
         cout << "Image_name " << image_name << " image_owner " << image_owner
              << " views " << views << endl;
+
+        // embed image
         this->newimg(image_name, image_owner, views);
+
+        // get operational pair for this request
         three_element_group r;
         r.name = image_owner;
         r.imagename = image_name;
         r.views = views;
         requests_buffer.push_back(
             make_pair(2004, r));
+
         views_is.close();
-        string deletecommand2 = "rm " + newViewsName; // delete extracted views
+
+        // delete extracted views file
+        string deletecommand2 = "rm " + newViewsName;
         QProcess::execute(QString::fromStdString(deletecommand2));
-      } else {
-        cout << "couldn't open views file! " << endl;
       }
-    } break;
+
+      else
+      {
+        cout << "could not open views file! " << endl;
+      }
+    } break; //end of recieve
 
     case 2005: // notify request
     {
-      cout << "2005 request recieved" << endl;
+      cout << "2005 request received" << endl;
       int cc = 0;
       string username = "", imageName = "", NewNoViews = "";
-      while (msg[cc] != '*') {
+
+      // get fields of unmarshalled header-less message
+      while (msg[cc] != '*')
+      {
         username.append(1, msg[cc]);
         cc++;
       }
       cc++;
-      while (msg[cc] != '*') {
+
+      while (msg[cc] != '*')
+      {
         imageName.append(1, msg[cc]);
         cc++;
       }
       cc++;
-      while (msg[cc] != '*') {
+
+      while (msg[cc] != '*')
+      {
         NewNoViews.append(1, msg[cc]);
         cc++;
       }
+
       cout << "User: " << username << endl;
       cout << "Requested Image Name: " << imageName << endl;
       cout << "New Requested No of Views: " << NewNoViews << endl;
+
+      // get pairs of shared-with usernames and their views for the image requested
       vector<pair<string, int>> v_vectors;
       v_vectors = myimages[imageName];
-      for (int i = 0; i < v_vectors.size(); i++) {
+
+      // update number of views for this user
+      for (int i = 0; i < v_vectors.size(); i++)
+      {
         if (v_vectors[i].first == username)
           v_vectors[i].second = stoi(NewNoViews);
       }
 
+      // update image's pairs
       myimages[imageName] = v_vectors;
       memset(Serverlittle_buffer, 0, sizeof(Serverlittle_buffer));
-
-      //      pair<int, pair<string, string>> pair_temp =
-      //          make_pair(2002, make_pair(username, imageName));
-      //      bool pair_found = false;
-      //      for (int e = 0; e < requests_buffer.size() && !pair_found; e++) {
-      //        pair_found = requests_buffer[e] == pair_temp;
-      //      }
-      //      if (!pair_found) {
-      //        requests_buffer.push_back(pair_temp);
-      //        Serverlittle_buffer[0] = '1';
-      //      } else {
-      //        Serverlittle_buffer[0] = '0';
-      //      }
 
       Serverlittle_buffer[0] = '1';
       Serverlittle_buffer[1] = 0;
 
+      //creating the message and marshalling it to be sent
       char *msg_char = reinterpret_cast<char *>(this->Serverlittle_buffer);
-
+      
       Message view_request_reply(Reply, msg_char, strlen(msg_char),
                                  op_id_request, rpcid_request, 0, 0, 0);
+        
       string x_reply = view_request_reply.marshal();
+        
       char marshalled_message_reply[BUFFER_SIZE];
+        
       int n = x_reply.length();
+        
       strncpy(marshalled_message_reply, x_reply.c_str(), n + 1);
 
+      //sending the message
       if (sendto(sv->s, marshalled_message_reply,
                  strlen((const char *)marshalled_message_reply), 0,
                  (struct sockaddr *)&tempSocketAddress, tempAddrlen) < 0) {
         perror("View Request reply sendto failed");
       }
 
-      // End of changes
-
-    } break; // end of view
+    } break; // end of notify
 
     case 2006: // view request
     {
       cout << "2006 request recieved" << endl;
       int cc = 0;
       string username = "", imageName = "", NewNoViews = "";
+    
+      // get message fields
       while (msg[cc] != '*') {
         username.append(1, msg[cc]);
         cc++;
@@ -460,23 +576,32 @@ public:
       cout << "Requested Image Name: " << imageName << endl;
       cout << "New Requested No of Views: " << NewNoViews << endl;
 
+      //updating image with new number of views granted
       bool c = updateimg(imageName, username, stoi(NewNoViews));
+      
+      //if update could not happen
       if (!c) {
         Serverlittle_buffer[0] = '0';
         cout << "Views failed to update" << endl;
       }
 
+      //update happened successfully
       cout << "Views Updated Successfully!" << endl;
       Serverlittle_buffer[0] = '1';
       Serverlittle_buffer[1] = 0;
 
+      //creating the message and marshalling it to be sent
       char *msg_char = reinterpret_cast<char *>(this->Serverlittle_buffer);
 
       Message view_request_reply(Reply, msg_char, strlen(msg_char),
                                  op_id_request, rpcid_request, 0, 0, 0);
+        
       string x_reply = view_request_reply.marshal();
+        
       char marshalled_message_reply[BUFFER_SIZE];
+        
       int n = x_reply.length();
+        
       strncpy(marshalled_message_reply, x_reply.c_str(), n + 1);
 
       if (sendto(sv->s, marshalled_message_reply,
@@ -484,8 +609,6 @@ public:
                  (struct sockaddr *)&tempSocketAddress, tempAddrlen) < 0) {
         perror("View Request reply sendto failed");
       }
-
-      // End of changes
 
     } break; // end of view
 
@@ -494,6 +617,8 @@ public:
       cout << "2007 request recieved" << endl;
       int cc = 0;
       string username = "", imageName = "", NewNoViews = "";
+    
+      // get message fields
       while (msg[cc] != '*') {
         username.append(1, msg[cc]);
         cc++;
@@ -512,42 +637,54 @@ public:
       cout << "Requested Image Name: " << imageName << endl;
       cout << "New Requested No of Views: " << NewNoViews << endl;
 
+      // initialize request receive sub-buffer
       memset(Serverlittle_buffer, 0, sizeof(Serverlittle_buffer));
+        
+      // pair this request's three fields with the operation --> operational pair
        three_element_group r;
        r.name = username;
        r.imagename = imageName;
        r.views = stoi(NewNoViews);
       pair<int, three_element_group> pair_temp =
           make_pair(2007, r);
+        
+      // find if this request's operational pair is not found
       bool pair_found = false;
       for (int e = 0; e < requests_buffer.size() && !pair_found; e++) {
         pair_found = (requests_buffer[e].first == pair_temp.first && requests_buffer[e].second.name == pair_temp.second.name && requests_buffer[e].second.imagename == pair_temp.second.imagename && requests_buffer[e].second.views == pair_temp.second.views);
       }
-      if (!pair_found) {
+        
+      // store pair in requests buffer if not found
+      if (!pair_found)
+      {
         requests_buffer.push_back(pair_temp);
         Serverlittle_buffer[0] = '1';
-      } else {
+      }
+      else
+      {
         Serverlittle_buffer[0] = '0';
       }
 
       Serverlittle_buffer[1] = 0;
 
+      // get reply
       char *msg_char = reinterpret_cast<char *>(this->Serverlittle_buffer);
 
       Message view_request_reply(Reply, msg_char, strlen(msg_char),
                                  op_id_request, rpcid_request, 0, 0, 0);
+     
+      // marshal reply
       string x_reply = view_request_reply.marshal();
       char marshalled_message_reply[BUFFER_SIZE];
       int n = x_reply.length();
       strncpy(marshalled_message_reply, x_reply.c_str(), n + 1);
 
+      // send marshalled reply to sender address (temp)
       if (sendto(sv->s, marshalled_message_reply,
                  strlen((const char *)marshalled_message_reply), 0,
                  (struct sockaddr *)&tempSocketAddress, tempAddrlen) < 0) {
         perror("View Request reply sendto failed");
       }
-
-      // End of changes
 
     } break; // end of view
 
@@ -557,6 +694,7 @@ public:
     return true;
   }
 
+  //sending reply message
   void sendReply(char *temp_buffer) {
 
     struct sockaddr_in recievedAddr;
@@ -569,6 +707,7 @@ public:
 
   // End of Server Functions
 
+  //creating a socket
   static void makeDestSA(struct sockaddr_in *sa, char *hostname, int port) {
     struct hostent *host;
     sa->sin_family = AF_INET;
@@ -586,11 +725,14 @@ public:
     sa->sin_port = htons(port);
   }
 
+  //sign up request
   int sign_up(string username, string password) {
     const char* UN=username.c_str();
     const char* PW=password.c_str();
     qDebug("%s %s",UN, PW);
     bool nospecial = true;
+      
+    //checks username and password to satisfy specific conditions
     for (int i = 0; i < username.length() && nospecial; i++) {
       nospecial = isalnum(username[i]);
     }
@@ -599,14 +741,17 @@ public:
     }
     if (!nospecial) { // special chars
       return 3;       // error code for special chars as they are delimiters
-    } else {
+    }
+    else
+    {
       struct sockaddr_in dosSocketAddress;
 
       const char* d_ip=dos_ip;
-     // const char* PW=password.c_str();
+
       qDebug("%s",d_ip);
       makeDestSA(&dosSocketAddress, dos_ip, dos_port);
 
+      //prepares to send sign up request message
       string msg = username + "*" + password;
       char *msg_char = new char[msg.length() + 1];
       strcpy(msg_char, msg.c_str());
@@ -617,6 +762,7 @@ public:
       char marshalled_message[BUFFER_SIZE];
 
       string x = sign_up_request.marshal();
+        
       int n = x.length();
       strncpy(marshalled_message, x.c_str(), n + 1);
 
@@ -632,7 +778,8 @@ public:
           if ((n = sendto(sc->s, marshalled_message,
                           strlen((const char *)marshalled_message), 0,
                           (struct sockaddr *)&dosSocketAddress,
-                          sizeof(struct sockaddr_in))) < 0){
+                          sizeof(struct sockaddr_in))) < 0)
+          {
               return 6; // send failed
           }
           npoll = poll(&ss, 1, timeout_time_ms);
@@ -641,28 +788,31 @@ public:
         if (npoll == 0 || npoll == -1) { // timeout
           return 2;
         }
-        else {
-      unsigned char little_buffer[10];
-      memset(little_buffer, 0, sizeof(little_buffer));
-      struct sockaddr_in tempSocketAddress;
-      socklen_t tempAddrlen = sizeof(tempSocketAddress);
-      if ((r = recvfrom(sc->s, little_buffer, 10, 0,
-                        (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) <
-          0)
-        perror("Receive Failed");
+        else //no timeout happened
+        {
+            unsigned char little_buffer[10];
+            memset(little_buffer, 0, sizeof(little_buffer));
+            struct sockaddr_in tempSocketAddress;
+            socklen_t tempAddrlen = sizeof(tempSocketAddress);
+            if ((r = recvfrom(sc->s, little_buffer, 10, 0,
+                        (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) < 0)
+                perror("Receive Failed");
 
-      if (little_buffer[0] == '1')
-        return 1;
-      else if (little_buffer[0] == '0')
-        return 5;
-      else
-        return 8;
+            if (little_buffer[0] == '1')
+                return 1;
+            else if (little_buffer[0] == '0')
+                return 5;
+            else
+                return 8;
+        }
     }
-    }
-  }
+  } //end of sign up
 
+  //login request
   int login(string username, string password) {
     bool nospecial = true;
+    
+    //checks username and password to satisfy specific conditions
     for (int i = 0; i < username.length() && nospecial; i++) {
       nospecial = isalnum(username[i]);
     }
@@ -671,10 +821,13 @@ public:
     }
     if (!nospecial) { // special chars
       return 3;       // error code for special chars as they are delimiters
-    } else {
-
-      makeDestSA(&(this->dosSocket), dos_ip, dos_port); // make dos socket
-
+    }
+    else
+    {
+      // make dos socket
+      makeDestSA(&(this->dosSocket), dos_ip, dos_port);
+        
+      //preparing login request
       string msg = username + "*" + password;
       char *msg_char = new char[msg.length() + 1];
       strcpy(msg_char, msg.c_str());
@@ -701,7 +854,8 @@ public:
           if ((n = sendto(sv->s, marshalled_message, // sc->s
                           strlen((const char *)marshalled_message), 0,
                           (struct sockaddr *)&(this->dosSocket),
-                          sizeof(struct sockaddr_in))) < 0){
+                          sizeof(struct sockaddr_in))) < 0)
+          {
               return 6; // send failed
           }
           npoll = poll(&ss, 1, timeout_time_ms);
@@ -709,40 +863,44 @@ public:
       }
          if (npoll == 0 || npoll == -1) {
            return 2;
-         } else {
-      unsigned char little_buffer[10];
-      memset(little_buffer, 0, sizeof(little_buffer));
-      struct sockaddr_in tempSocketAddress;
-      socklen_t tempAddrlen = sizeof(tempSocketAddress);
-      if ((r = recvfrom(sv->s, little_buffer, 10, 0, // sc->s
-                        (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) <
-          0)
-        perror("Receive Failed");
-      if (little_buffer[0] == '1')
-        return 1;
-      else if (little_buffer[0] == '0')
-        return 0;
-      else if (little_buffer[0] == '5')
-        return 5;
-      else if (little_buffer[0] == '4')
-        return 4;
-      else
-        return 8;
+         }
+         else
+         {
+             unsigned char little_buffer[10];
+             memset(little_buffer, 0, sizeof(little_buffer));
+             struct sockaddr_in tempSocketAddress;
+             socklen_t tempAddrlen = sizeof(tempSocketAddress);
+             if ((r = recvfrom(sv->s, little_buffer, 10, 0, // sc->s
+                        (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) < 0)
+                 perror("Receive Failed");
+             if (little_buffer[0] == '1')
+                 return 1;
+             else if (little_buffer[0] == '0')
+                 return 0;
+             else if (little_buffer[0] == '5')
+                 return 5;
+             else if (little_buffer[0] == '4')
+                 return 4;
+             else
+                 return 8;
+         }
     }
-  }
-  }
+  } //end of login
 
   int logout() {
 
+    //preparing logout request message
     string msg = this->username;
     char *msg_char = new char[msg.length() + 1];
     strcpy(msg_char, msg.c_str());
 
     Message logout_request(Request, msg_char, strlen(msg_char), 1003,
                            ++requestID, 0, 0, 0);
+      
     char marshalled_message[BUFFER_SIZE];
 
     string x = logout_request.marshal();
+      
     int n = x.length();
     strncpy(marshalled_message, x.c_str(), n + 1);
 
@@ -758,42 +916,47 @@ public:
         if ((n = sendto(sc->s, marshalled_message,
                         strlen((const char *)marshalled_message), 0,
                         (struct sockaddr *)&(this->dosSocket),
-                        sizeof(struct sockaddr_in))) < 0){
+                        sizeof(struct sockaddr_in))) < 0)
+        {
             return 6; // send failed
         }
         npoll = poll(&ss, 1, timeout_time_ms);
         no_tries++;
     }
-
        if (npoll == 0 || npoll == -1) {
          return 2;
-       } else {
-
-    unsigned char little_buffer[10];
-    memset(little_buffer, 0, sizeof(little_buffer));
-    struct sockaddr_in tempSocketAddress;
-    socklen_t tempAddrlen = sizeof(tempSocketAddress);
-    if ((r = recvfrom(sc->s, little_buffer, 10, 0,
-                      (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) < 0)
-      perror("Receive Failed");
-    // close bound sockets
-    close(sc->s);
-    close(sv->s);
-    if (little_buffer[0] == '1')
-      return 1;
-    else
-      return 0;
        }
-  }
-
+       else
+       {
+           unsigned char little_buffer[10];
+           memset(little_buffer, 0, sizeof(little_buffer));
+           struct sockaddr_in tempSocketAddress;
+           socklen_t tempAddrlen = sizeof(tempSocketAddress);
+           if ((r = recvfrom(sc->s, little_buffer, 10, 0,
+                      (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) < 0)
+               perror("Receive Failed");
+           // close bound sockets
+           close(sc->s);
+           close(sv->s);
+           if (little_buffer[0] == '1')
+               return 1;
+           else
+               return 0;
+        }
+  } //end of logout
+    
+  //getting path of exe
   std::string getexepath() {
     char result[PATH_MAX];
     ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
     return std::string(result, (count > 0) ? count : 0);
   }
 
+  //uploading an image
   int upload(string imagepath) {
     cout << imagepath << endl;
+    
+    //if no image path
     if (imagepath == "")
       return 6;
 
@@ -808,6 +971,7 @@ public:
 
     bool nospecial = true;
 
+    //checking of there is any special characters
     for (int i = 0; i < imagename.length() && nospecial; i++) {
       nospecial =
           isalnum(imagename[i]) || imagename[i] == '.' || imagename[i] == '/';
@@ -816,7 +980,10 @@ public:
     }
     if (!nospecial) { // special chars
       return 3;       // error code for special chars as they are delimiters
-    } else {
+    }
+    else
+    {
+      //preparing to send message
       string msg = this->username + "*" + imagename;
       char *msg_char = new char[msg.length() + 1];
       strcpy(msg_char, msg.c_str());
@@ -827,6 +994,7 @@ public:
       char marshalled_message[BUFFER_SIZE];
 
       string x = upload_request.marshal();
+        
       int n = x.length();
       strncpy(marshalled_message, x.c_str(), n + 1);
 
@@ -850,54 +1018,55 @@ public:
       }
         if (npoll == 0 || npoll == -1) {
           return 2;
-        } else {
-      unsigned char little_buffer[10];
-      memset(little_buffer, 0, sizeof(little_buffer));
-      struct sockaddr_in tempSocketAddress;
-      socklen_t tempAddrlen = sizeof(tempSocketAddress);
-      if ((r = recvfrom(sc->s, little_buffer, 10, 0,
-                        (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) <
-          0)
-        perror("Receive Failed");
-
-      string projectpath = this->getexepath();
-
-      for (int j = projectpath.length() - 1; j > 0; j--) {
-
-        if (projectpath[j] == '/') {
-          projectpath = projectpath.substr(0, j);
-          break;
         }
-      }
+        else
+        {
+            unsigned char little_buffer[10];
+            memset(little_buffer, 0, sizeof(little_buffer));
+            struct sockaddr_in tempSocketAddress;
+            socklen_t tempAddrlen = sizeof(tempSocketAddress);
+            if ((r = recvfrom(sc->s, little_buffer, 10, 0,
+                        (struct sockaddr *)&tempSocketAddress, &tempAddrlen)) < 0)
+                perror("Receive Failed");
 
-      cout << "projectpath " << projectpath << endl;
-      if (little_buffer[0] == '1') {
+            string projectpath = this->getexepath();
 
-        QProcess::execute(QString::fromStdString(
-            "cp " + projectpath + "/default.jpeg " + projectpath + "/" +
+            for (int j = projectpath.length() - 1; j > 0; j--) {
+
+                if (projectpath[j] == '/') {
+                    projectpath = projectpath.substr(0, j);
+                    break;
+                }
+            }
+
+            cout << "projectpath " << projectpath << endl;
+            if (little_buffer[0] == '1') {
+
+                QProcess::execute(QString::fromStdString("cp " + projectpath + "/default.jpeg " + projectpath + "/" +
             this->username + "_" + imagename));
 
-        if (pathname != projectpath)
-          QProcess::execute(QString::fromStdString(
-              "cp " + imagepath + " " + projectpath + "/" + imagename));
+                if (pathname != projectpath)
+                    QProcess::execute(QString::fromStdString("cp " + imagepath + " " + projectpath + "/" + imagename));
 
-        vector<pair<string, int>> newimage;
-        myimages[imagename] = newimage;
+                vector<pair<string, int>> newimage;
+                myimages[imagename] = newimage;
 
-        return 1;
+                return 1;
+            }
+            else if (little_buffer[0] == '0') {
+                return 0;
+            }
+            else if (little_buffer[0] == '9') {
+                return 9;
+            }
+            else
+                return 8;
+            }
+      }
+  } //end of uploading
 
-      } else if (little_buffer[0] == '0') {
-        return 0;
-      } else if (little_buffer[0] == '9') {
-        return 9;
-      } else
-        return 8;
-    }
-  }
-  }
-
-  int notify_views_by_viewer(string owner, string selectedImage,
-                             int NewNoViews) {
+  int notify_views_by_viewer(string owner, string selectedImage, int NewNoViews)
+    {
     vector<string> images;
     int resultUsers = this->getUsers();
     if(resultUsers == 1){
@@ -914,7 +1083,6 @@ public:
 
         makeDestSA(&ownerSocket, remote_peer_address, remote_peer_port);
 
-        // string image_with_full_path = path_full + "/" + selectedImage;
         string msg = this->username + "*" + selectedImage + "*" +
                      to_string(NewNoViews) + "*";
         char *msg_char = new char[msg.length() + 1];
@@ -922,7 +1090,6 @@ public:
 
         Message notify_views_message(Request, msg_char, strlen(msg_char), 2005,
                                      ++requestID, 0, 0, 0);
-        //  char * marshalled_message = image_request.marshal();
 
         char marshalled_message[BUFFER_SIZE];
 
@@ -985,8 +1152,8 @@ public:
     }
 
   }
-  int update_views_by_owner(string viewer, string selectedImage,
-                            int NewNoViews) {
+    
+  int update_views_by_owner(string viewer, string selectedImage, int NewNoViews) {
     cout << "Update Views Invoked" << endl;
     vector<string> images;
     int resultUsers = this->getUsers();
@@ -1065,8 +1232,6 @@ public:
           else
             return 2;
       }
-
-
     }
           }
         else if(resultUsers == 2){
@@ -1080,8 +1245,8 @@ public:
         }
   }
 
-  int update_views_request_by_viewer(string owner, string selectedImage,
-                            int NewNoViews) {
+  int update_views_request_by_viewer(string owner, string selectedImage, int NewNoViews)
+    {
     cout << "Update Views Request by Viewer Invoked" << endl;
     vector<string> images;
     int resultUsers = this->getUsers();
@@ -1109,7 +1274,6 @@ public:
 
     Message update_views_message(Request, msg_char, strlen(msg_char), 2007,
                                  ++requestID, 0, 0, 0);
-    //  char * marshalled_message = image_request.marshal();
 
     char marshalled_message[BUFFER_SIZE];
 
@@ -1183,7 +1347,7 @@ public:
 
     string temp_ip = images[1];
     cout << images[1] << endl;
-    int remote_peer_port = stoi(images[2], nullptr, 0); // Refaay
+    int remote_peer_port = std::stoi(images[2], nullptr, 0); // Refaay
     cout << "Remote IP " << temp_ip << ", port " << remote_peer_port << endl;
     char remote_peer_address[1024];
     char little_buffer[100];
@@ -1281,13 +1445,12 @@ public:
     strcpy(remote_peer_address, remote_peer_ip.c_str());
     makeDestSA(&receiverSocket, remote_peer_address, remote_peer_port);
 
-    cout << "Starting to send the image " << endl;
+    cout << "Start of Send image" << endl;
     string steg_image_name = this->username + "_" + selectedImage;
-    cout << "Image name: " << selectedImage << ". New name: " << steg_image_name
+    cout << "Image name " << selectedImage << " Steg name " << steg_image_name
          << endl;
 
     // Embedding the views txt file in the image
-
 
     string imagenodot;
     for (int j = selectedImage.length() - 1; j > 0; j--) {
@@ -1308,16 +1471,12 @@ public:
     views_os.close();
 
     QProcess::execute(QString::fromStdString("steghide embed -cf " +
-                                             selectedImage + " -ef " +
-                                             viewsFilename + " -sf " +
-                                             steg_image_name +
-                                             " -p hk "));
+                                                 selectedImage + " -ef " +
+                                                 viewsFilename + " -sf " +
+                                                 steg_image_name +
+                                                 " -p hk "));
 
-    //QProcess::execute(QString::fromStdString("steghide embed -cf " +
-                                             //steg_image_name + " -ef " +
-                                             //selectedImage + " -p hk "));
-
-    ifstream is(steg_image_name, ifstream::binary);
+    std::ifstream is(steg_image_name, std::ifstream::binary);
 
     if (is) {
 
@@ -1325,6 +1484,7 @@ public:
       is.seekg(0, is.end);
       unsigned int length = is.tellg();
       is.seekg(0, is.beg);
+      // cout << "Original Decoded Image Length: "<< length << endl;
 
       char *newbuffer = new char[length]; // allocate memory
 
@@ -1362,6 +1522,10 @@ public:
         printf("%s\n", "Loop Start:");
         if (current_length_before_marshalling + imageFrag_size < length) {
 
+          // memcpy (char_array, message+(current_length), imageFrag_size);
+
+          // char_array[imageFrag_size] = '\0';
+          // cout<<"char_array "<<char_array<<endl;
 
           Message imageFrag(
               Request, (newbuffer + current_length_before_marshalling),
@@ -1417,9 +1581,6 @@ public:
           printf("Current Received Total %d.\n", current_length);
 
         } else {
-          // memcpy (char_array, message+(current_length), fakka);
-
-          // char_array[fakka] = '\0'; // C-String terminate
 
           MF = 0;
           Message imageLastFrag(Request,
@@ -1433,7 +1594,6 @@ public:
           current_length += n;
           current_length_before_marshalling += fakka;
 
-          //  cout<<message<<endl;
           if ((n = sendto(sc->s, message_fakka, strlen(message_fakka), 0,
                           (struct sockaddr *)&receiverSocket,
                           sizeof(struct sockaddr_in))) < 0)
@@ -1473,7 +1633,7 @@ public:
       printf("Current %d.\n", current_length);
 
     } else
-      cout << "couldn't open file" << endl;
+      cout << "could'nt open file" << endl;
   }
 
   int getUsers() {
