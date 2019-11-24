@@ -51,17 +51,17 @@ void Profile::on_allusersButton_clicked()
     users.setModal(true);
     users.exec();
 }
-/*
+
 void Profile::on_sharedImButton_clicked()
 {
     // Shared Images Window goes here
-    SharedImages sharedIm;
-    sharedIm.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
-                         Qt::CustomizeWindowHint);
-    sharedIm.setModal(true);
-    sharedIm.exec();
+    SharedImages secd(this, peer);
+   /* secd.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
+                        Qt::CustomizeWindowHint);*/
+    secd.setModal(true);
+    secd.exec();
 }
-*/
+
 void Profile::on_notifications_clicked()
 {
     //VIEWING NOTIFICATIONS

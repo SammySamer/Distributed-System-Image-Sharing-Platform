@@ -1,8 +1,8 @@
-Samer peace.jpeg 
+Samer cloud.jpeg dog.jpg images.jpeg 
 Mariam 
-Maram panda.jpg 
+Maram panda.jpg stones.jpeg peace.jpeg 
 Ruby 
-1  
+1  panda.jpg 
 2 
 3 
 4 
