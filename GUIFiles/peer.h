@@ -1311,6 +1311,7 @@ class Peer
       return 3;
     } 
     
+    
     else {
       // unmarshal the reply
       Message reply_update_request(reinterpret_cast<char *>(little_buffer));
