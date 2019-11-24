@@ -52,9 +52,8 @@ public:
   fstream imgfile;
   fstream Myimgsfile;
   UDPSocketClient *sv;
-  std::string ip = "10.65.101.32";
-  char *dos_ip = "127.0.0.1";
-  //char *dos_ip = "10.7.57.6";
+  //char *dos_ip = "127.0.0.1";
+  char *dos_ip = "10.40.37.126";
   int dos_port = 8080;
   UDPSocketClient *sc;
   struct sockaddr_in dosSocket;
