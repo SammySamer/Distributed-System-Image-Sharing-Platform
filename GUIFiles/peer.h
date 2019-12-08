@@ -71,10 +71,12 @@ class Peer
       // receiver peer IP
       string ip = "10.65.101.32";
 
-      // DOS address (loopback)
-      char *dos_ip = "127.0.0.1";
-      //char *dos_ip = "10.7.57.6";
-      int dos_port = 8080;
+      // DOS address (loopback)// DOS address
+      char *hostname = "DoS";
+      struct hostent * host_entry;
+      char *dos_ip;
+      //char *dos_ip = "10.7.57.249";
+      int dos_port = 8000;
 
       // client for receiving
       UDPSocketClient *sc;
@@ -122,6 +124,12 @@ class Peer
       // constructor
       Peer()
       {
+        host_entry=gethostbyname(hostname);
+        if (!host_entry)
+            cout << host_entry->h_name << "failed to resolve hostname\n";
+        else
+            dos_ip = inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[0]));
+            
         this->sv = new UDPSocketClient();
         this->sc = new UDPSocketClient();
       }
