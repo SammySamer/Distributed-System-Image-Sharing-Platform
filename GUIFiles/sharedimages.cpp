@@ -70,7 +70,7 @@ void SharedImages::on_push_view_clicked() {
                                    peer->sharedimgs[cover]);
       if(resultUsers == 1){
         string realImage = ownername + "_" + imagename;
-        ViewImage secd(this, peer, cover, realImage);
+        ViewImage secd(this, peer, cover, imagename);
         secd.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
                           Qt::CustomizeWindowHint);
         secd.setModal(true);

@@ -22,7 +22,11 @@ ViewImage::ViewImage(QWidget *parent, Peer *peer, string cover,
   QProcess::execute(QString::fromStdString(extract_command));
   QPixmap pm(QString::fromStdString(img));
   ui->lbl_image->setPixmap(
-      pm.scaled(400, 400, Qt::IgnoreAspectRatio, Qt::FastTransformation));
+      pm.scaled(500, 500, Qt::IgnoreAspectRatio, Qt::FastTransformation));
+
+  string delete_cmd =
+      "rm " + img;
+  QProcess::execute(QString::fromStdString(delete_cmd));
 }
 
 ViewImage::~ViewImage() { delete ui; }

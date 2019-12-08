@@ -414,7 +414,7 @@ class Peer
       string extract_command;
 
       extract_command = "steghide extract -sf " + newFileName +
-                        " -p hk";
+                        " -p hk -f";
 
       QProcess::execute(QString::fromStdString(extract_command));
 
@@ -433,7 +433,7 @@ class Peer
 
       // extract views
       string views_extractcommand =
-          "steghide extract -sf " + image_name + " -p hk";
+          "steghide extract -sf " + image_name + " -p hk -f";
 
       QProcess::execute(QString::fromStdString(views_extractcommand));
 
@@ -1485,12 +1485,11 @@ class Peer
     string tempImageName = viewerName + imagenodot + "_temp.jpg";
     QProcess::execute(QString::fromStdString("steghide embed -cf " +
                                                  selectedImage + " -ef " +
-                                                 viewsFilename + " -sf " +
-                                                  tempImageName +
+                                                 viewsFilename +
                                                  " -p hk "));
 
     QProcess::execute(QString::fromStdString("steghide embed -cf default.jpg -ef " +
-                                             tempImageName + " -sf " +
+                                             selectedImage + " -sf " +
                                                   steg_image_name +
                                                  " -p hk "));
 

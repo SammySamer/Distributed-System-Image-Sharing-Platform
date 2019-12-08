@@ -13,5 +13,5 @@ Ruby
 9 
 0 
 Testing123 
-Aya images.jpeg 
+Aya images.jpeg dog.jpg stones.jpeg peace.jpeg panda.jpg cloud.jpeg 
 mm 
