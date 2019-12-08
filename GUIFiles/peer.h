@@ -1482,11 +1482,18 @@ class Peer
 
     views_os.close();
 
+    string tempImageName = viewerName + imagenodot + "_temp.jpg";
     QProcess::execute(QString::fromStdString("steghide embed -cf " +
                                                  selectedImage + " -ef " +
                                                  viewsFilename + " -sf " +
-                                                 steg_image_name +
+                                                  tempImageName +
                                                  " -p hk "));
+
+    QProcess::execute(QString::fromStdString("steghide embed -cf default.jpg -ef " +
+                                             tempImageName + " -sf " +
+                                                  steg_image_name +
+                                                 " -p hk "));
+
 
     std::ifstream is(steg_image_name, std::ifstream::binary);
 
@@ -1639,8 +1646,9 @@ class Peer
       printf("%s", "Message Sent. ");
       printf("Current %d.\n", current_length);
 
-    } else
-      cout << "could'nt open file" << endl;
+    }
+    else
+      cout << "couldn't open file" << endl;
   }
 
   int getUsers() {

@@ -75,33 +75,30 @@ public:
 		unsigned char* buffer = new unsigned char[MAIN_BUFFER];
 		unsigned char* sendBuffer = new unsigned char[LITTLE_BUFFER];
 
-		printf("Getting requests: \n");
+		printf("\nGetting requests: \n");
 		memset(buffer, 0, sizeof(buffer));
 
 		//receive marshalled message
 		r = recvfrom(sv->s, buffer, MAIN_BUFFER, 0,
 			(struct sockaddr*) & recievedAddr, &addresslength);
 
-		printf("Received Message = %s.\n", buffer);
-
 		inet_ntop(AF_INET, &(recievedAddr.sin_addr), sender_ip, INET_ADDRSTRLEN);
 		sender_port = htons((&recievedAddr)->sin_port);
-		printf("Sender IP:%s. Sender's port: %i\n", sender_ip, sender_port);
+		printf("Sender IP: %s. Sender's port: %i\n", sender_ip, sender_port);
 
 		Message requestMsg(reinterpret_cast<char*>(buffer));
 		int OPCODE = requestMsg.getOperation();
 		int RPC_ID = requestMsg.getRPCId();
 		string msg = requestMsg.getUnmarshalledMessage();
 
-		cout << "Operation Code: " << OPCODE << endl;
-		cout << "RPC ID: " << RPC_ID << endl;
-		cout << "Received Msg: " << msg << endl;
+		cout << "Operation Code: " << OPCODE;
 		
 		switch (OPCODE) {
 
 		//Sign Up
 		case 1001:
 		{
+			cout << ", Signing Up...\n";
 			int place = 0;
 			string username = "", password = "";
 			while (msg[place] != '*') {
@@ -114,9 +111,6 @@ public:
 				password.append(1, msg[place]);
 				place++;
 			}
-
-			cout << "User: " << username << endl;
-			cout << "Pass: " << password << endl;
 			bool didsign = signUp(username, password);
 
 			//Reply back
@@ -140,6 +134,7 @@ public:
 		//Login
 		case 1002:
 		{
+			cout << ", Logging in...\n";
 			int place = 0;
 			string username = "", password = "";
 			while (msg[place] != '*') {
@@ -152,9 +147,6 @@ public:
 				password.append(1, msg[place]);
 				place++;
 			}
-
-			cout << "User: " << username << endl;
-			cout << "Pass: " << password << endl;
 			int didLogin = login(username, password);
 
 			//Login reply
@@ -169,7 +161,6 @@ public:
 				sendBuffer[0] = '4';
 
 			sendBuffer[1] = 0;
-			cout << "Login status: " << sendBuffer[0] << endl;
 			if (sendto(sv->s, sendBuffer, strlen((const char*)sendBuffer), 0,
 				(struct sockaddr*) & recievedAddr, addresslength) < 0) {
 				perror("Logging In reply failed");
@@ -181,6 +172,7 @@ public:
 		//Logout
 		case 1003:
 		{
+			cout << ", Logging Out...\n";
 			int place = 0;
 			string username = "";
 			while (msg[place] != 0) {
@@ -188,7 +180,7 @@ public:
 				place++;
 			}
 
-			cout << "User: " << username << endl;
+			cout << "User " << username << " is logging out...";
 			bool didLogout = logout(username);
 
 			//Logout reply
@@ -213,8 +205,8 @@ public:
 		//View Users
 		case 1100: 
 		{
+			cout << ", Viewing Users...\n";
 			string lister = view();
-			cout << "Viewing all users: " << lister << endl;
 
 			//View Reply
 			memset(sendBuffer, 0, sizeof(sendBuffer));
@@ -230,6 +222,7 @@ public:
 		//Upload
 		case 2001:
 		{
+			cout << ", Uploading Image...\n";
 			int place = 0;
 			string username = "", imagename = "";
 

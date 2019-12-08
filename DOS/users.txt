@@ -1,4 +1,4 @@
-Samer peace.jpeg 
+Samer peace.jpeg cat.jpeg minions.jpeg 
 Mariam 
 Maram 
 Ruby 
@@ -13,5 +13,5 @@ Ruby
 9 
 0 
 Testing123 
-Aya 
+Aya images.jpeg 
 mm 
