@@ -15,3 +15,5 @@ Ruby
 Testing123 
 Aya images.jpeg dog.jpg stones.jpeg peace.jpeg panda.jpg cloud.jpeg 
 mm 
+Moh stones.jpeg peace.jpeg panda.jpg minions.jpeg 
+Ahm 

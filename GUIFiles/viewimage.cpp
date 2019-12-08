@@ -3,7 +3,7 @@
 #include <qpicture.h>
 
 ViewImage::ViewImage(QWidget *parent, Peer *peer, string cover,
-                                 string img)
+                                 string img, int views)
     : QDialog(parent), ui(new Ui::ViewImage), peer(peer) {
   ui->setupUi(this);
   ui->lbl_time->setText(
@@ -27,6 +27,13 @@ ViewImage::ViewImage(QWidget *parent, Peer *peer, string cover,
   string delete_cmd =
       "rm " + img;
   QProcess::execute(QString::fromStdString(delete_cmd));
+
+  if ((views - 1) == 0) {
+      string delete_cmd =
+          "rm " + cover;
+      QProcess::execute(QString::fromStdString(delete_cmd));
+  }
+
 }
 
 ViewImage::~ViewImage() { delete ui; }

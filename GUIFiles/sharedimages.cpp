@@ -70,7 +70,7 @@ void SharedImages::on_push_view_clicked() {
                                    peer->sharedimgs[cover]);
       if(resultUsers == 1){
         string realImage = ownername + "_" + imagename;
-        ViewImage secd(this, peer, cover, imagename);
+        ViewImage secd(this, peer, cover, imagename, views);
         secd.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint |
                           Qt::CustomizeWindowHint);
         secd.setModal(true);
@@ -96,12 +96,20 @@ void SharedImages::on_push_view_clicked() {
         ui->lbl_result->setStyleSheet("QLabel { color : red; }");
         ui->lbl_result->setText("Check your internet connection!");
       }
-    } else {
+    }
+    else {
+        string delete_cmd =
+            "rm " + img;
+        QProcess::execute(QString::fromStdString(delete_cmd));
+
+        delete_cmd = "rm " + cover;
+        QProcess::execute(QString::fromStdString(delete_cmd));
       ui->lbl_result->setVisible(true);
       ui->lbl_result->setText(QString("You don't have enough views! Refresh or check notifications."));
       ui->lbl_result->setStyleSheet("QLabel { color : red; }");
     }
-  } else {
+  }
+    else {
     ui->lbl_result->setVisible(true);
     ui->lbl_result->setStyleSheet("QLabel { color : red; }");
     ui->lbl_result->setText("Please, select an image!");

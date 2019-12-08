@@ -14,7 +14,7 @@ class ViewImage : public QDialog
 
 public:
     explicit ViewImage(QWidget *parent = nullptr, Peer *peer = nullptr,
-                       string cover = "", string img = "");
+                       string cover = "", string img = "", int views = 0);
     ~ViewImage();
 
 private slots:
