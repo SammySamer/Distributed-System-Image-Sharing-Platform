@@ -22,6 +22,13 @@
      <height>25</height>
     </rect>
    </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(206, 92, 0);
+color: rgb(46, 52, 54);</string>
+   </property>
    <property name="text">
     <string>Back</string>
    </property>
@@ -35,6 +42,9 @@
      <height>291</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 236);</string>
+   </property>
   </widget>
   <widget class="QLabel" name="lbl_user">
    <property name="geometry">
@@ -45,6 +55,9 @@
      <height>17</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 236);</string>
+   </property>
    <property name="text">
     <string>User</string>
    </property>
@@ -54,9 +67,12 @@
     <rect>
      <x>10</x>
      <y>30</y>
-     <width>481</width>
+     <width>350</width>
      <height>17</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 236);</string>
    </property>
    <property name="text">
     <string>Images:</string>
@@ -71,6 +87,9 @@
      <height>17</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="text">
     <string>TextLabel</string>
    </property>
@@ -84,6 +103,9 @@
      <height>17</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 236);</string>
+   </property>
    <property name="text">
     <string>Time</string>
    </property>
@@ -96,6 +118,13 @@
      <width>201</width>
      <height>25</height>
     </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(206, 92, 0);
+color: rgb(46, 52, 54);</string>
    </property>
    <property name="text">
     <string>Show Images and its Viewers</string>

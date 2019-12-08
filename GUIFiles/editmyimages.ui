@@ -22,6 +22,13 @@
      <height>25</height>
     </rect>
    </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(206, 92, 0);
+color: rgb(46, 52, 54);</string>
+   </property>
    <property name="text">
     <string>Refresh</string>
    </property>
@@ -35,21 +42,15 @@
      <height>25</height>
     </rect>
    </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(206, 92, 0);
+color: rgb(46, 52, 54);</string>
+   </property>
    <property name="text">
     <string>Back</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lbl_user">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>10</y>
-     <width>131</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>My Image Viewers</string>
    </property>
   </widget>
   <widget class="QLabel" name="lbl_image">
@@ -74,6 +75,9 @@
      <height>17</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 236);</string>
+   </property>
    <property name="text">
     <string>Shared With Viewers</string>
    </property>
@@ -97,6 +101,13 @@
      <height>25</height>
     </rect>
    </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(206, 92, 0);
+color: rgb(46, 52, 54);</string>
+   </property>
    <property name="text">
     <string>Update Views</string>
    </property>
@@ -110,6 +121,10 @@
      <height>25</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(46, 52, 54);
+background-color: rgb(238, 238, 236);</string>
+   </property>
   </widget>
   <widget class="QLabel" name="lbl_result">
    <property name="geometry">
@@ -120,6 +135,9 @@
      <height>17</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(224, 37, 37);</string>
+   </property>
    <property name="text">
     <string>Error</string>
    </property>
@@ -129,9 +147,12 @@
     <rect>
      <x>10</x>
      <y>580</y>
-     <width>471</width>
+     <width>420</width>
      <height>17</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 236);</string>
    </property>
    <property name="text">
     <string>Time</string>

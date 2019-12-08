@@ -689,7 +689,7 @@ class Peer
         perror("View Request reply sendto failed");
       }
 
-    } break; // end of view
+    } break; 
 
     default:
       break;
@@ -1085,7 +1085,7 @@ class Peer
         cout << images[1] << endl;
         string temp_ip = images[1];
         cout << images[2] << endl;
-        int remote_peer_port = std::stoi(images[2], nullptr, 0); // Refaay
+        int remote_peer_port = std::stoi(images[2], nullptr, 0);
         cout << "Remote IP " << temp_ip << ", port " << remote_peer_port << endl;
         char remote_peer_address[1024];
         char little_buffer[100];
@@ -1175,7 +1175,7 @@ class Peer
 
     string temp_ip = images[1];
     cout << images[2] << endl;
-    int remote_peer_port = std::stoi(images[2], nullptr, 0); // Refaay
+    int remote_peer_port = std::stoi(images[2], nullptr, 0);
     cout << "Remote IP " << temp_ip << ", port " << remote_peer_port << endl;
     char remote_peer_address[1024];
     char little_buffer[100];
@@ -1268,7 +1268,7 @@ class Peer
 
     string temp_ip = images[1];
     cout << images[2] << endl;
-    int remote_peer_port = std::stoi(images[2], nullptr, 0); // Refaay
+    int remote_peer_port = std::stoi(images[2], nullptr, 0);
     cout << "Remote IP " << temp_ip << ", port " << remote_peer_port << endl;
     char remote_peer_address[1024];
     char little_buffer[100];
@@ -1319,7 +1319,6 @@ class Peer
       string msg_view_request_reply =
           reply_update_request.getUnmarshalledMessage();
 
-      // Hassan's resend if lost
       int rpc_id_new = reply_update_request.getRPCId();
 
       if (rpc_id_new != requestID) // check if the request matches the reply
@@ -1360,7 +1359,7 @@ class Peer
 
     string temp_ip = images[1];
     cout << images[1] << endl;
-    int remote_peer_port = std::stoi(images[2], nullptr, 0); // Refaay
+    int remote_peer_port = std::stoi(images[2], nullptr, 0); 
     cout << "Remote IP " << temp_ip << ", port " << remote_peer_port << endl;
     char remote_peer_address[1024];
     char little_buffer[100];
@@ -1497,7 +1496,6 @@ class Peer
       is.seekg(0, is.end);
       unsigned int length = is.tellg();
       is.seekg(0, is.beg);
-      // cout << "Original Decoded Image Length: "<< length << endl;
 
       char *newbuffer = new char[length]; // allocate memory
 
@@ -1577,13 +1575,12 @@ class Peer
 
           // checks if the total length of the packets sent is equal to the
           // received length in the reply
-
           if (received_length != current_length) {
-            // if not reset the current_length_before_marshalling in order to
+            // if not, then reset the current_length_before_marshalling in order to
             // resend the packet
             perror("Dropped packets! received_length != current_length.");
             current_length_before_marshalling -=
-                imageFrag_size; // Drop Tolerance
+                imageFrag_size;
           }
 
           printf("Current Received Total %d.\n", current_length);
@@ -1633,7 +1630,7 @@ class Peer
 
           if (received_length != current_length) {
             perror("Dropped packets! received_length != current_length.");
-            current_length_before_marshalling -= fakka; // Drop Tolerance
+            current_length_before_marshalling -= fakka;
           }
 
           printf("Current Received Total %d.\n", current_length);

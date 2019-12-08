@@ -22,6 +22,13 @@
      <height>25</height>
     </rect>
    </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(206, 92, 0);
+color: rgb(46, 52, 54);</string>
+   </property>
    <property name="text">
     <string>Refresh</string>
    </property>
@@ -34,6 +41,13 @@
      <width>89</width>
      <height>25</height>
     </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(206, 92, 0);
+color: rgb(46, 52, 54);</string>
    </property>
    <property name="text">
     <string>Back</string>
@@ -48,6 +62,13 @@
      <height>25</height>
     </rect>
    </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(206, 92, 0);
+color: rgb(46, 52, 54);</string>
+   </property>
    <property name="text">
     <string>Approve</string>
    </property>
@@ -60,6 +81,13 @@
      <width>89</width>
      <height>25</height>
     </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(206, 92, 0);
+color: rgb(46, 52, 54);</string>
    </property>
    <property name="text">
     <string>Delete</string>
@@ -87,6 +115,9 @@
      <height>17</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 236);</string>
+   </property>
    <property name="text">
     <string>Time:</string>
    </property>
@@ -99,6 +130,9 @@
      <width>101</width>
      <height>17</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(238, 238, 236);</string>
    </property>
    <property name="text">
     <string>Notifications:</string>
@@ -122,6 +156,10 @@
      <width>113</width>
      <height>25</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(238, 238, 236);
+color: rgb(46, 52, 54);</string>
    </property>
   </widget>
  </widget>
