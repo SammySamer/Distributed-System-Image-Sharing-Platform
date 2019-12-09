@@ -34,8 +34,16 @@ void Signup::on_registerButton_clicked()
     newUser = peer->sign_up(username_string,password_string);
 
     if (newUser == 1)
+    {
         QMessageBox::information(this, "Registration Succeeded",
                                "You are now registered!");
+
+        // Login Window goes here
+        this->hide();
+        Login login;
+        login.setModal(true);
+        login.exec();
+    }
 
     else if (newUser == 0)
         QMessageBox::critical(this, "Registration Failed",

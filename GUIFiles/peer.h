@@ -73,7 +73,7 @@ class Peer
       struct hostent * host_entry;
       char *dos_ip;
       //char *dos_ip = "10.7.57.249";
-      int dos_port = 8000;
+      int dos_port = 8080;
 
       // client for receiving
       UDPSocketClient *sc;

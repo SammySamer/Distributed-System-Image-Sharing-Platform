@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "peer.h"
+#include "login.h"
 
 namespace Ui {
 class Signup;

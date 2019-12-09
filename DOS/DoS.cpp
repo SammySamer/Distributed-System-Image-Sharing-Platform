@@ -13,7 +13,7 @@
 using namespace std;
 
 int main() {
-	system("sudo set-hostname DoS");
+	//system("hostnamectl set-hostname DoS");
 
 	cout << "ImageSharer's Directory of Service has opened!\n";
 	DircServ DoS;
