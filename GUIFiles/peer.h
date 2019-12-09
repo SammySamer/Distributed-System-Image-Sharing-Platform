@@ -68,11 +68,8 @@ class Peer
       // client for sending
       UDPSocketClient *sv;
 
-      // receiver peer IP
-      string ip = "10.65.101.32";
-
       // DOS address (loopback)// DOS address
-      char *hostname = "DoS";
+      char *hostname = "DoS.local";
       struct hostent * host_entry;
       char *dos_ip;
       //char *dos_ip = "10.7.57.249";
